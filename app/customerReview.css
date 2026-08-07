@@ -1,0 +1,80 @@
+.review-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #dadada;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: #dff6fb; */
+  background: rgb(105, 11, 177, 0.4);
+  padding: 11px 10px 15px 10px;
+}
+
+.review-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.review-image {
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid rgb(105, 11, 177);
+}
+
+.review-label {
+  display: block;
+  color: rgb(105, 11, 177);
+  font-size: 12px;
+}
+
+.review-name {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.company-details {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Stats */
+
+.stats {
+  display: flex;
+}
+
+.stat-item {
+  flex: 1;
+  padding: 25px;
+}
+
+.stat-item:first-child {
+  border-right: 1px solid #ececec;
+}
+
+.stat-item h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+.stat-item p {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #444;
+}
+.customer-review p {
+  font-size: 14px;
+}
