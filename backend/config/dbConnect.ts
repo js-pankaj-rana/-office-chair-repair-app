@@ -11,7 +11,9 @@ const dbConnect = async () => {
     DB_URI = process.env.DB_LOCAL_URI!;
   if (process.env.NODE_ENV === "production") DB_URI = process.env.DB_URI!;
 
-  await mongoose.connect(DB_URI);
+  await mongoose.connect(DB_URI, {
+    dbName: "online-repair-service",
+  });
 };
 
 export default dbConnect;
