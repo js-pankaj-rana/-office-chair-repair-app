@@ -1,24 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SingleAddress } from "./SingleAddress";
-
-export interface IAddressForm {
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  postalCode: string;
-  state: string;
-  isDefault?: boolean;
-}
-
-interface AddressCardProps {
-  addresses: IAddressForm[];
-}
+import { IAddressForm } from "@/backend/models/orderdetails";
 
 interface IAddressCardProps {
   addressProps: {
     addresses: IAddressForm[];
     selectedIndex: number;
-    setSelectedIndex: React.Dispatch<React.SetStateAction<IAddressForm | null>>;
+    setSelectedIndex: (num: number) => void;
   };
 }
 
@@ -26,10 +14,12 @@ const AddressCard = ({ addressProps }: IAddressCardProps) => {
   const { addresses, selectedIndex, setSelectedIndex } = addressProps;
 
   const [showDropdown, setShowDropdown] = useState(false);
-  let selectedAddress = {};
-  if (addresses) {
-    selectedAddress = addresses[selectedIndex] ?? null;
-  }
+  const [selectedAddress, setSelectedAddress] = useState<null | IAddressForm>();
+  useEffect(() => {
+    if (selectedIndex) {
+      setSelectedAddress(addresses[selectedIndex]);
+    }
+  }, [selectedIndex]);
 
   return (
     <div className="card">
@@ -52,8 +42,11 @@ const AddressCard = ({ addressProps }: IAddressCardProps) => {
             className="form-select mb-3"
             value={selectedIndex}
             onChange={(e) => {
-              setSelectedIndex(Number(e.target.value));
-              setShowDropdown(false);
+              const { value } = e.target;
+              if (typeof value === "string") {
+                setSelectedIndex(Number(value));
+                setShowDropdown(false);
+              }
             }}
           >
             {addresses.map((address, index) => (

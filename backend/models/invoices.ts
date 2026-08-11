@@ -1,6 +1,7 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
+import { IOrderDetail } from "./orderdetails";
 
-interface IEstimatePrice {
+export interface IEstimatePrice {
   gstPercentage: number;
   cgst: number;
   sgst: number;
@@ -13,7 +14,7 @@ interface IEstimatePrice {
 }
 
 export interface IInvoice extends Document {
-  orderDetail: mongoose.Types.ObjectId;
+  orderDetail: mongoose.Types.ObjectId | IOrderDetail;
   invoice: IEstimatePrice[];
   createdAt: Date;
   updatedAt: Date;

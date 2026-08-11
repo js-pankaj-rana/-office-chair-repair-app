@@ -3,6 +3,7 @@
 import { IUser } from "@/backend/models/user";
 import { useDeleteUserMutation } from "@/redux/api/userApi";
 import { MDBDataTable } from "mdbreact";
+import mongoose, { ObjectId } from "mongoose";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -23,6 +24,7 @@ const AllUsers = ({ data }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
+      // @ts-ignore
       toast.error(error?.data?.errMessage);
     }
 
@@ -83,6 +85,7 @@ const AllUsers = ({ data }: Props) => {
             <button
               className="btn btn-outline-danger mx-2"
               disabled={isLoading}
+
               onClick={() => deleteUserHandler(user?._id)}
             >
               <i className="fa fa-trash"></i>
@@ -95,7 +98,7 @@ const AllUsers = ({ data }: Props) => {
     return data;
   };
 
-  const deleteUserHandler = (id: string) => {
+  const deleteUserHandler = (id: mongoose.Types.ObjectId) => {
     deleteUser(id);
   };
 

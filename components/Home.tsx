@@ -67,7 +67,7 @@ const Home: React.FC = () => {
 
       {/* Process */}
       {/* <TimeLine /> */}
-      <BookingTimeline currentStep={4} />
+      <BookingTimeline />
       {/* CTA */}
       <Testimonials />
     </>

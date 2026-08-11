@@ -1,8 +1,22 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
+import { IUser } from "./user";
 
 export interface IImage extends Document {
   public_id: string;
   url: string;
+}
+export type IOrderStatus =
+  "Start" | "Initiated" | "Verified" | "Cancelled" | "Successful";
+
+export interface IAddressForm {
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  postalCode: string;
+  state: string;
+  isDefault?: boolean;
+  gstin?: string;
+  billingName?: string;
 }
 
 type IEstimate = IImage;
@@ -37,7 +51,7 @@ export interface IOrderDetail extends Document {
   faultDescription: string;
   quotation?: IEstimate[];
   orderNumber?: number;
-  orderStatus: "Start" | "Initiated" | "Verified" | "Cancelled" | "Successful";
+  orderStatus: IOrderStatus;
   paidAt: Date;
   paymentInfo: IPayment[];
   productImages?: IImage[];
@@ -45,26 +59,10 @@ export interface IOrderDetail extends Document {
   scheduleDate: Date;
   scheduleTime: string;
   serviceCode: string;
-  shippingAddress?: {
-    addressLine1: string;
-    addressLine2?: string;
-    city: string;
-    country: string;
-    postalCode?: string;
-    state?: string;
-  };
-  billingName?: string;
-  billingAddress?: {
-    addressLine1: string;
-    addressLine2?: string;
-    city: string;
-    country: string;
-    postalCode?: string;
-    state?: string;
-  };
-  gstin?: string;
+  shippingAddress?: IAddressForm;
+  billingAddress?: IAddressForm;
   updatedAt: Date;
-  user: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId | IUser;
 }
 
 const orderDetailsSchema = new Schema<IOrderDetail>(
@@ -166,9 +164,12 @@ const orderDetailsSchema = new Schema<IOrderDetail>(
       state: {
         type: String,
       },
-    },
-    billingName: {
-      type: String,
+      gstin: {
+        type: String,
+      },
+      billingName: {
+        type: String,
+      },
     },
     billingAddress: {
       addressLine1: {
@@ -189,10 +190,14 @@ const orderDetailsSchema = new Schema<IOrderDetail>(
       state: {
         type: String,
       },
+      gstin: {
+        type: String,
+      },
+      billingName: {
+        type: String,
+      },
     },
-    gstin: {
-      type: String,
-    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

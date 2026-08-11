@@ -7,11 +7,7 @@ const BlackLogo = () => (
         <defs id="defs5" />
         <g fill="white" id="g5">
           <g transform="translate(8.926136363636374, 0) scale(0.125)" id="g4">
-            <g
-              transform="translate(0, 0) scale(1 1) rotate(0)"
-              fill="#ffffff"
-              id="g2"
-            >
+            <g transform="translate(0, 0) scale(1 1) rotate(0)" id="g2">
               <svg
                 width="339.0"
                 height="400.0"
@@ -61,7 +57,7 @@ const BlackLogo = () => (
     </defs>
     <style />
     <rect width="100%" height="100%" fill="#fff" />
-    <rect width="100%" height="100%" fill="#000" mask="url(#overlay_mask)" />
+    <rect width="100%" height="100%" mask="url(#overlay_mask)" />
   </svg>
 );
 

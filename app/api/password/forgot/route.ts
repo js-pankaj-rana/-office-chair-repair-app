@@ -12,5 +12,5 @@ dbConnect();
 router.post(forgotPassword);
 
 export async function POST(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }

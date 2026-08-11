@@ -12,7 +12,7 @@ import {
 } from "@/redux/api/userApi";
 
 import Address from "./Address";
-import { IAddressForm, IAddress } from "@/backend/models/user";
+import { IAddressForm } from "@/backend/models/orderdetails";
 import { useRouter } from "next/router";
 
 export default function EditAddress() {

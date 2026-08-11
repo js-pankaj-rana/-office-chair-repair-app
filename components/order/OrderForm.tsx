@@ -7,15 +7,16 @@ import { useSelector } from "react-redux";
 import AddressCard from "./AddressCard";
 import "react-datepicker/dist/react-datepicker.css";
 import ButtonLoader from "../layout/ButtonLoader";
-import { IImage } from "@/backend/models/orderdetails";
+import { IImage, IOrderStatus, IPayment } from "@/backend/models/orderdetails";
 import UploadImages from "./UploadImages";
 import { SingleAddress } from "./SingleAddress";
 import BillingAddress, { BillingAddressData } from "./BillingAddress";
 
 interface Props {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (any) => void;
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | Element>
+  ) => void;
   isLoading: boolean;
   submitButtonLabel: string;
   formTitle: string;
@@ -31,11 +32,11 @@ export interface IVisitingTime {
 interface BookingForm {
   productImages?: IImage[];
   orderNumber: number;
-  orderStatus: "Start";
-  scheduleDate?: string;
+  orderStatus?: IOrderStatus;
+  scheduleDate?: Date;
   scheduleTime?: string;
   serviceCode?: string;
-  paymentInfo?: "";
+  paymentInfo?: IPayment[];
   faultDescription: string;
   quantityOrdered: number;
   orderEstimatedPrice?: number;
@@ -308,17 +309,18 @@ const OrderForm = ({
                       />
                     </div>
                   )}
-                  {type !== "create" && (
-                    <div className="col-md-6">
-                      <label className="form-label">Payment Info</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={booking.paymentInfo}
-                        readOnly
-                      />
-                    </div>
-                  )}
+                  {type !== "create" &&
+                    null
+                    // <div className="col-md-6">
+                    //   <label className="form-label">Payment Info</label>
+                    //   <input
+                    //     type="text"
+                    //     className="form-control"
+                    //     value={booking?.paymentInfo?.status}
+                    //     readOnly
+                    //   />
+                    // </div>
+                  }
                   <div className="col-md-6">
                     <label className="form-label">
                       Product fault description (optional)

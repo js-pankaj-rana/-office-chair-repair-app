@@ -92,7 +92,7 @@ export const userApi = createApi({
       providesTags: ["Address"],
     }),
 
-    getAddress: builder.query<IAddress, string>({
+    getAddress: builder.query<{ data: IAddress; success: boolean }, string>({
       query: (id) => ({ url: `/address/${id}` }),
     }),
 

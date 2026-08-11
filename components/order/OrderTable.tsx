@@ -1,5 +1,6 @@
 import { Badge, Button, Table } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import { IOrder } from "./OrderList";
 
 interface Props {
   orders: IOrder[];
@@ -45,7 +46,7 @@ const OrderTable: React.FC<Props> = ({ orders }) => {
               <th>Schedule Date</th>
               <th>Shipping Address</th>
               <th>Images</th>
-              <th width={130}>Action</th>
+              <th>Action</th>
             </tr>
           </thead>
 

@@ -5,9 +5,9 @@ import { createEdgeRouter } from "next-connect";
 import { NextRequest } from "next/server";
 
 interface RequestContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 const router = createEdgeRouter<NextRequest, RequestContext>();
@@ -17,5 +17,5 @@ dbConnect();
 router.use(isAuthenticatedUser).put(updateOrder);
 
 export async function PUT(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }

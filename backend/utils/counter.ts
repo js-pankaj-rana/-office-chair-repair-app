@@ -1,4 +1,4 @@
-import { Schema, model, models, InferSchemaType } from "mongoose";
+import { Schema, model, models, Model, InferSchemaType } from "mongoose";
 
 // Service sequence counter schema
 
@@ -21,7 +21,7 @@ const orderCounterSchema = new Schema(
 export type IOrderCounter = InferSchemaType<typeof orderCounterSchema>;
 
 export const OrderCounter =
-  models.OrderCounter ||
+  (models.OrderCounter as Model<IOrderCounter>) ||
   model<IOrderCounter>("OrderCounter", orderCounterSchema);
 
 // Customer sequence counter start from 1000000;
@@ -67,5 +67,5 @@ const employeeCounterSchema = new Schema(
 export type IEmployeeCounter = InferSchemaType<typeof employeeCounterSchema>;
 
 export const EmployeeCounter =
-  models.EmployeeCounter ||
+  (models.EmployeeCounter as Model<IEmployeeCounter>) ||
   model<IEmployeeCounter>("EmployeeCounter", employeeCounterSchema);

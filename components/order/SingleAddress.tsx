@@ -1,11 +1,7 @@
-import { IAddressForm } from "./AddressCard";
+import { IAddressForm } from "@/backend/models/orderdetails";
 
-type billingAddress = IAddressForm & {
-  gstin?: string;
-  billingName?: string;
-};
 interface IProps {
-  address: billingAddress;
+  address: IAddressForm;
 }
 
 export const SingleAddress = ({ address }: IProps) => {

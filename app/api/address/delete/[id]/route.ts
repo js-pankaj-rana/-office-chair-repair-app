@@ -17,5 +17,5 @@ dbConnect();
 router.use(isAuthenticatedUser).delete(deleteAddress);
 
 export async function DELETE(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }

@@ -27,6 +27,7 @@ const InvoiceEmail = () => {
   const docRef = useRef(null);
 
   const [getOrder, { data, isLoading }] = useLazyGetOrderByIdAdminQuery(
+    // @ts-ignore
     id ? id : skipToken
   );
 

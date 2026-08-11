@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 const getOrder = async (id: string) => {
-  const authHeader = getAuthHeader();
+  const authHeader = await getAuthHeader();
 
   const res = await fetch(`${process.env.API_URL}/api/order/${id}`, authHeader);
   return res.json();

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, {
+  useRef,
+  useState,
+  SetStateAction,
+  Dispatch,
+  ChangeEvent,
+} from "react";
 import Image from "next/image";
 
 const MAX_IMAGES = 5;
@@ -8,9 +14,7 @@ const MAX_IMAGES = 5;
 interface IProps {
   imgProps: {
     images: string[];
-    setImages: (arg: string) => void;
-    uploadedImages: File[];
-    setUploadedImages: (arg: File) => void;
+    setImages: Dispatch<SetStateAction<string[]>>;
   };
 }
 
@@ -19,7 +23,7 @@ const UploadImages = ({ imgProps }: IProps) => {
   const { images, setImages } = imgProps;
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
 
@@ -85,7 +89,7 @@ const UploadImages = ({ imgProps }: IProps) => {
             <button
               type="button"
               className="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle m-2"
-              onClick={() => removeImagePreview(index)}
+              onClick={() => removeImagePreview(image)}
             >
               ×
             </button>

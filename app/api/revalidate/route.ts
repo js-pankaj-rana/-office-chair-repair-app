@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  revalidateTag(tag);
+  revalidateTag(tag, "");
 
   return NextResponse.json({ revalided: true, now: Date.now() });
 }

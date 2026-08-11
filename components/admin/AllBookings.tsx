@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IOrderDetail } from "@/backend/models/orderdetails";
 import {
   useDeleteProductImageMutation,
@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 import moment from "moment";
 import OrderReviewModal from "@/components/modals/OrderReviewModal";
 
-interface DeleteImagePayload {
+export interface DeleteImagePayload {
   orderId: string;
   body: {
     public_id: string;
@@ -84,6 +84,7 @@ const AllBookings = () => {
       rows: [],
     };
 
+    // @ts-ignore
     bookings?.data?.forEach((booking: IOrderDetail) => {
       const {
         scheduleDate,
@@ -104,21 +105,6 @@ const AllBookings = () => {
 
         actions: (
           <>
-            {/* <Link
-              href={`/bookings/${booking._id}`}
-              className="btn btn-outline-primary"
-            >
-              {" "}
-              <i className="fa fa-eye"></i>{" "}
-            </Link>
-            <Link
-              href={`/bookings/invoice/${booking._id}`}
-              className="btn btn-outline-success ms-2"
-            >
-              {" "}
-              <i className="fa fa-receipt"></i>{" "}
-            </Link> */}
-
             <button
               className="btn btn-outline-danger mx-2"
               disabled={isLoading}
@@ -150,7 +136,8 @@ const AllBookings = () => {
           order={currentOrder}
           onDelete={onImageDelete}
           isImgDeleting={isImgDeleting}
-          deleteImgError={deleteImgError}
+          //@ts-ignore
+          deleteImgError={deleteImgError ?? "Something went wrong"}
           isImgDeleteSuccess={isImgDeleteSuccess}
         />
       )}

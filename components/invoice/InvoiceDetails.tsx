@@ -23,8 +23,8 @@ export interface ISummary {
 
 export default function InvoiceDetails({ invoiceData }: InvoiceDetailsProps) {
   const isIntraState =
-    invoiceData?.orderDetail?.billingAddress?.state === "Jharkhand";
-
+    // @ts-ignore
+    invoiceData.orderDetail.billingAddress.state === "Jharkhand";
   const tableHeaders = [
     ...COMMON_HEADERS,
     ...(isIntraState ? INTRA_STATE_HEADERS : INTER_STATE_HEADERS),
@@ -67,6 +67,7 @@ export default function InvoiceDetails({ invoiceData }: InvoiceDetailsProps) {
         <tbody>
           {invoiceData?.invoice?.map((item, index) => {
             return (
+              // @ts-ignore
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>{item.description}</td>

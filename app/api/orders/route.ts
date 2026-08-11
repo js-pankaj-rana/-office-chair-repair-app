@@ -13,5 +13,5 @@ dbConnect();
 router.use(isAuthenticatedUser).get(getAllOrder);
 
 export async function GET(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }

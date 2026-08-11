@@ -2,17 +2,13 @@
 
 import { Button, Modal } from "react-bootstrap";
 import ImageCarousel from "../admin/ImageCarousel";
-import { IEstimatePrice, IOrderDetail } from "@/backend/models/orderdetails";
-import { useState, useMemo, useEffect } from "react";
+import { IOrderDetail } from "@/backend/models/orderdetails";
+import React, { useState, useMemo, useEffect } from "react";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "@/app/bookingTimeline.css";
 import { SingleAddress } from "../order/SingleAddress";
-import {
-  useGenrateInvoiceAdminMutation,
-  // useGenrateQuotationAdminMutation,
-  // useGetOrderByIdAdminQuery,
-} from "@/redux/api/orderApi";
+import { useGenrateInvoiceAdminMutation } from "@/redux/api/orderApi";
 
 import { useCreateInvoiceMutation } from "@/redux/api/invoiceApi";
 
@@ -29,12 +25,12 @@ import {
   IFieldConfig,
   ORDER_ESTIMATION_FIELDS,
 } from "@/constants/formConstant";
-import OrderDetail from "../order/OrderDetail";
+import { DeleteImagePayload } from "../admin/AllBookings";
 
 interface Props {
   show: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete: (params: DeleteImagePayload) => void;
   order: IOrderDetail;
   isImgDeleting: boolean;
   deleteImgError: string;
@@ -76,18 +72,13 @@ const OrderReviewModal: React.FC<Props> = ({
     quantityOrdered,
     shippingAddress,
     billingAddress,
-    gstin,
-    billingName,
     _id: orderId,
     user,
   } = order;
 
-  const newBillingAddress = Object.assign(
-    {
-      ...billingAddress,
-    },
-    { gstin, billingName }
-  );
+  // const newBillingAddress = Object.assign({
+  //   ...billingAddress, {}
+  // });
 
   const minDate = useMemo(() => {
     const date = new Date();
@@ -111,26 +102,26 @@ const OrderReviewModal: React.FC<Props> = ({
   const [toggleDateDisable, setToggleDateDisable] = useState(true);
   const [currentFormIndex, setCurrentFormIndex] = useState<number>(0);
   const initialEstimationObj = {
-    gstPercentage: "18",
-    cgst: "0",
-    sgst: "0",
-    igst: "0",
-    totalPrice: "0",
+    gstPercentage: 18,
+    cgst: 0,
+    sgst: 0,
+    igst: 0,
+    totalPrice: 0,
     description: "Office Chair Repair Service",
-    rate: "0",
-    unit: "1",
+    rate: 0,
+    unit: 1,
     HsnSacCode: "998724",
   };
 
   const initialPlatformFeeObj = {
-    gstPercentage: "18",
-    cgst: "22.50",
-    sgst: "22.50",
-    igst: "45.00",
-    totalPrice: "295.00",
+    gstPercentage: 18,
+    cgst: 22.5,
+    sgst: 22.5,
+    igst: 45.0,
+    totalPrice: 295.0,
     description: "IT/software platform service",
-    rate: "250",
-    unit: "1",
+    rate: 250,
+    unit: 1,
     HsnSacCode: "998314",
   };
 
@@ -169,13 +160,14 @@ const OrderReviewModal: React.FC<Props> = ({
     const { estimatePrice } = currentFormObj;
 
     const calcGstData = calculateEstimate(
-      estimatePrice?.rate ?? 1,
-      estimatePrice?.unit ?? 1,
-      estimatePrice?.gstPercentage,
+      estimatePrice.rate,
+      estimatePrice.unit,
+      estimatePrice.gstPercentage,
       "Jharkhand",
       billingAddress.state
     );
 
+    // @ts-ignore
     setEstimations((prev) => {
       return prev.map((item, index) =>
         index === currentFormIndex
@@ -200,7 +192,7 @@ const OrderReviewModal: React.FC<Props> = ({
   const handleNavigate = () => {
     if (order._id) {
       const estimateCollection = estimations.map((estimate) => {
-        const { id, estimatePrice } = estimate;
+        const { id: _id, estimatePrice } = estimate;
         return estimatePrice;
       });
       const reqPayloadInvoice = {
@@ -266,15 +258,6 @@ const OrderReviewModal: React.FC<Props> = ({
     });
   };
 
-  const generateQuotation = () => {
-    const reqPayload = {
-      servicingDate,
-      estimations,
-    };
-    genrateInvoiceAdmin({ id: order._id, body: reqPayload });
-    setEstimatePrice(initialEstimatePrice);
-  };
-
   useEffect(() => {
     if (isCISuccess) {
       toast.success("Invoice generated and sent successfully.");
@@ -282,6 +265,7 @@ const OrderReviewModal: React.FC<Props> = ({
       onClose();
     }
     if (ciError) {
+      // @ts-ignore
       toast.error(ciError?.message);
     }
   }, [isCISuccess, ciError]);
@@ -305,7 +289,8 @@ const OrderReviewModal: React.FC<Props> = ({
                 ...item,
                 estimatePrice: {
                   ...item.estimatePrice,
-                  [name]: value,
+                  // @ts-ignore
+                  [name]: isNaN(value) ? value : Number(value),
                 },
               }
             : item
@@ -316,7 +301,8 @@ const OrderReviewModal: React.FC<Props> = ({
 
   const FILTER_ORDER_ESTIMATION_FIELDS = checkIgstOrSgst(
     ORDER_ESTIMATION_FIELDS,
-    billingAddress?.state,
+    // @ts-ignore
+    billingAddress.state,
     "Jharkhand"
   );
 
@@ -341,8 +327,6 @@ const OrderReviewModal: React.FC<Props> = ({
                     images={productImages}
                     onDelete={onDelete}
                     isImgDeleting={isImgDeleting}
-                    deleteImgError={deleteImgError}
-                    isImgDeleteSuccess={isImgDeleteSuccess}
                     orderId={orderId}
                     orderStatus={orderStatus}
                   />
@@ -360,7 +344,7 @@ const OrderReviewModal: React.FC<Props> = ({
                   </div>
                   <div>
                     <h4 className="form-label fw-bold mt-4">Billing Address</h4>
-                    <SingleAddress address={newBillingAddress} />
+                    <SingleAddress address={billingAddress} />
                   </div>
                 </div>
               </div>
@@ -453,12 +437,11 @@ const OrderReviewModal: React.FC<Props> = ({
                         <OrderEstimation
                           formId={item.id}
                           removeEstimation={removeEstimation}
-                          isLoading={isLoading}
                           estimatePrice={item.estimatePrice}
                           handleChange={handleEstimateChange}
-                          generateInvoice={() => generateQuotation(item.id)}
-                          billingState={billingAddress?.state}
+                          billingState={billingAddress.state}
                           businessState="Jharkhand"
+                          orderStatus={orderStatus}
                         />
                       </div>
                     ))}

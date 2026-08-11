@@ -1,4 +1,3 @@
-import Image from "next/image";
 import BlackLogo from "../logo/BlackLogo";
 
 export default function InvoiceHeader() {

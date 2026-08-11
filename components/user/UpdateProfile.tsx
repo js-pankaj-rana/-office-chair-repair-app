@@ -61,6 +61,7 @@ const UpdateProfile = () => {
   // Handle success
   useEffect(() => {
     if (isSuccess) {
+      //@ts-ignore
       updateSession();
       router.refresh();
       toast.success("Profile updated successfully");

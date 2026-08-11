@@ -1,13 +1,7 @@
 "use client";
 
-import React, {
-  ChangeEvent,
-  FormEvent,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
-import { IImage, IPayment } from "@/backend/models/orderdetails";
+import React, { ChangeEvent, useState, useEffect, useRef } from "react";
+import { IImage, IOrderStatus, IPayment } from "@/backend/models/orderdetails";
 import toast from "react-hot-toast";
 import OrderForm from "./OrderForm";
 import {
@@ -21,7 +15,7 @@ import { useRouter } from "next/navigation";
 export interface IBookingForm {
   productImages: IImage[];
   orderNumber: number;
-  orderStatus: "Start" | "Initiated" | "Verified" | "Cancelled" | "Successful";
+  orderStatus: IOrderStatus;
   scheduleDate: Date | null;
   scheduleTime: string;
   faultDescription: string;
@@ -48,8 +42,6 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({ id }) => {
   const [getOrderById, { data: order, isLoading: isOrderLoading }] =
     useLazyGetOrderByIdQuery();
 
-  // console.log("====>>>", data);
-
   const [booking, setBooking] = useState<IBookingForm>({
     productImages: [],
     orderNumber: 0,
@@ -72,6 +64,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({ id }) => {
 
   useEffect(() => {
     if (error && "data" in error) {
+      // @ts-ignore
       toast.error(error?.data?.errMessage);
     }
   }, [error, isSuccess]);
@@ -126,8 +119,6 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({ id }) => {
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           booking={booking}
-          orderId={id}
-          setBooking={setBooking}
           isLoading={false}
           formTitle="Create your booking"
           submitButtonLabel="Create Booking"

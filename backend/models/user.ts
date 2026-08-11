@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Model, Document, Schema } from "mongoose";
+import { IAddressForm } from "./orderdetails";
 
 export interface IAddress extends Document {
   addressLine1: string;
@@ -11,17 +12,8 @@ export interface IAddress extends Document {
   state: string;
 }
 
-export interface IAddressForm {
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  postalCode: string;
-  state: string;
-  isDefault?: boolean;
-}
-
 export interface IUser extends Document {
-  address?: IAddress[];
+  address?: IAddressForm[];
   avatar?: {
     public_id: string;
     url: string;
@@ -168,5 +160,5 @@ userSchema.methods.getResetPasswordToken = function (): string {
   return resetToken;
 };
 
-export default mongoose.models.User ||
+export default (mongoose.models.User as Model<IUser>) ||
   mongoose.model<IUser>("User", userSchema);

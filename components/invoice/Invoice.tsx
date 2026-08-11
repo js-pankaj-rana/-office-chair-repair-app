@@ -63,7 +63,6 @@ interface InvoiceProps {
   customer: Customer;
   invoice: Invoice;
   items: InvoiceItem[];
-  bank: BankDetails;
 }
 
 const Invoice = () => {
@@ -72,6 +71,7 @@ const Invoice = () => {
   const docRef = useRef(null);
 
   const [getOrder, { data, isLoading }] = useLazyGetOrderByIdAdminQuery(
+    // @ts-ignore
     id ? id : skipToken
   );
 
@@ -87,7 +87,10 @@ const Invoice = () => {
   const [
     getInvoiceByOrder,
     { data: invoiceData, isLoading: isInvoiceLoading },
-  ] = useLazyGetInvoiceByOrderQuery(id ? id : skipToken);
+  ] = useLazyGetInvoiceByOrderQuery(
+    // @ts-ignore
+    id ? id : skipToken
+  );
 
   const handleDownload = () => {
     const input = docRef?.current;

@@ -24,8 +24,8 @@ router.use(isAuthenticatedUser, authorizeRoles("admin")).get(getOrderByIdAdmin);
 router.use(isAuthenticatedUser, authorizeRoles("admin")).put(genrateEstimation);
 
 export async function GET(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }
 export async function PUT(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return (await router.run(request, ctx)) as Response;
 }

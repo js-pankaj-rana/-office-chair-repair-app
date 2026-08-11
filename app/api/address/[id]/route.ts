@@ -16,10 +16,9 @@ dbConnect();
 
 router.use(isAuthenticatedUser).get(getAddressById);
 
-export async function GET(request: NextRequest, ctx: RequestContext) {
-  const params = await ctx.params;
-  return router.run(request, {
-    //@ts-ignore
-    params,
-  });
+export async function GET(
+  request: NextRequest,
+  ctx: RequestContext
+): Promise<Response> {
+  return (await router.run(request, ctx)) as Response;
 }

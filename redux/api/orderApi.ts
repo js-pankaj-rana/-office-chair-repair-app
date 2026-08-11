@@ -80,7 +80,7 @@ export const orderApi = createApi({
       providesTags: ["Orders"],
     }),
 
-    getAllOrder: builder.query<IOrder[], void>({
+    getAllOrder: builder.query<{ success: boolean; data: IOrder[] }, void>({
       query: () => "/orders",
       providesTags: ["Images"],
     }),

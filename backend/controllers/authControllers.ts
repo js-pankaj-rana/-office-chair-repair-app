@@ -137,7 +137,7 @@ export const getAllAddress = catchAsyncErrors(async (req: NextRequest) => {
 // Get signle address by id =>  /api/address/:id
 
 export const getAddressById = catchAsyncErrors(
-  async (req: NextRequest, { params }: { params: { id: string } }) => {
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const user = await User.findById(req.user._id).populate("address");
 
@@ -205,7 +205,7 @@ export const deleteAddress = catchAsyncErrors(
     if (user.address.length === 1) {
       throw new ErrorHandler("You cannot delete your only address.", 400);
     }
-
+    // @ts-ignore
     await User.findByIdAndUpdate(
       req.user._id,
       {
@@ -217,7 +217,7 @@ export const deleteAddress = catchAsyncErrors(
       },
       { new: true }
     );
-
+    // @ts-ignore
     const newUser = await User.findById(req.user._id);
     const isDefaultAddress = newUser.address.find(
       (address: IAddress) => address.isDefault === true

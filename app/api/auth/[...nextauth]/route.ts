@@ -3,83 +3,85 @@ import User, { IUser } from "@/backend/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { NextRequest } from "next/server";
 
-type Credentials = {
-  email: string;
-  password: string;
-};
+const handler = NextAuth({
+  session: {
+    strategy: "jwt",
+  },
 
-type Token = {
-  user: IUser;
-};
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
 
-async function auth(req: NextRequest, res: any) {
-  return await NextAuth(req, res, {
-    session: {
-      strategy: "jwt",
-    },
-    providers: [
-      CredentialsProvider({
-        // @ts-ignore
-        async authorize(credentials: Credentials) {
-          dbConnect();
-
-          const { email, password } = credentials;
-
-          const user = await User.findOne({ email }).select("+password");
-
-          if (!user) {
-            throw new Error("Invalid email or password");
-          }
-
-          const isPasswordMatched = await bcrypt.compare(
-            password,
-            user.password
-          );
-
-          if (!isPasswordMatched) {
-            throw new Error("Invalid email or password");
-          }
-
-          if (!user.emailVerified) {
-            throw new Error(
-              "Email not verified, please validate your email address."
-            );
-          }
-
-          return user;
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
         },
-      }),
-    ],
-    callbacks: {
-      jwt: async ({ token, user }) => {
-        const jwtToken = token as Token;
-        user && (token.user = user);
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
 
-        // Update session when user is updated
-        if (req.url?.includes("/api/auth/session?update")) {
-          // Hit the database and return the updated user
-          const updatedUser = await User.findById(jwtToken?.user?._id);
-          token.user = updatedUser;
+      async authorize(credentials) {
+        await dbConnect();
+
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        if (!email || !password) {
+          throw new Error("Email and password are required");
+        }
+        // @ts-ignore
+        const user = await User.findOne({ email }).select("+password");
+
+        if (!user) {
+          throw new Error("Invalid email or password");
         }
 
-        return token;
+        const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordMatched) {
+          throw new Error("Invalid email or password");
+        }
+
+        if (!user.emailVerified) {
+          throw new Error(
+            "Email not verified, please validate your email address."
+          );
+        }
+
+        return user;
       },
-      session: async ({ session, token }) => {
-        session.user = token.user as IUser;
+    }),
+  ],
 
-        //@ts-ignore
-        delete session?.user?.password;
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
 
-        return session;
-      },
+      return token;
     },
-    pages: {
-      signIn: "/login",
-    },
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-}
 
-export { auth as GET, auth as POST };
+    async session({ session, token }) {
+      session.user = token.user as IUser;
+
+      // Remove password from session
+      //@ts-ignore
+      delete session.user.password;
+
+      return session;
+    },
+  },
+
+  pages: {
+    signIn: "/login",
+  },
+
+  secret: process.env.NEXTAUTH_SECRET,
+});
+
+export { handler as GET, handler as POST };

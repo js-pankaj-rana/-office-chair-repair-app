@@ -1,5 +1,4 @@
-import { IAddressForm } from "@/backend/models/user";
-import { Table } from "react-bootstrap";
+import { IAddressForm } from "@/backend/models/orderdetails";
 
 interface CustomerDetailsProps {
   customerName: string;
@@ -18,16 +17,24 @@ export default function CustomerDetails({
   shippingAddress,
   billingAddress,
   orderNumber,
-  gstin,
 }: CustomerDetailsProps) {
-  const { addressLine1, addressLine2, city, postalCode, state } =
-    shippingAddress || {};
+  const {
+    addressLine1,
+    addressLine2,
+    city,
+    postalCode,
+    state,
+    billingName = null,
+    gstin = null,
+  } = shippingAddress || {};
   const {
     addressLine1: billingAddressLine1,
     addressLine2: billingAddressLine2,
     city: billingCity,
     postalCode: billingPostalCode,
     state: billingState,
+    gstin: billingGstin,
+    billingName: firmBillingName,
   } = billingAddress || {};
 
   return (
@@ -57,15 +64,15 @@ export default function CustomerDetails({
                     Customer Details:
                   </td>
                 </tr>
-                {gstin && (
+                {billingGstin && (
                   <tr>
                     <td className="fw-bold">Customer GSTIN: </td>
-                    <td>{gstin}</td>
+                    <td>{billingGstin}</td>
                   </tr>
                 )}
                 <tr>
                   <td className="fw-bold">Customer Name: </td>
-                  <td>{customerName}</td>
+                  <td>{billingName ? billingName : customerName}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Customer Email: </td>
@@ -85,8 +92,9 @@ export default function CustomerDetails({
                 <tr>
                   <td className="fw-bold">Billing Address: </td>
                   <td>
-                    {billingAddressLine1}, {billingAddressLine2}, {billingCity},{" "}
-                    {billingState}, {billingPostalCode}
+                    {firmBillingName}, {billingAddressLine1},{" "}
+                    {billingAddressLine2}, {billingCity}, {billingState},{" "}
+                    {billingPostalCode}
                   </td>
                 </tr>
               </tbody>

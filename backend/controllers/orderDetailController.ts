@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
-import OrderDetails, { IImage, ImageItem } from "../models/orderdetails";
+import OrderDetails, { IImage } from "../models/orderdetails";
 import ErrorHandler from "../utils/errorHandler";
 import { upload_file, delete_file } from "../utils/cloudinary";
 import { OrderCounter } from "../utils/counter";
-import WorkService from "../models/workservice";
-import { image } from "html2canvas/dist/types/css/types/image";
 import sendEmail from "../utils/sendEmail";
 import { emailUserInvoiceTemplate } from "../utils/emailUserInvoiceTemplate";
+import mongoose from "mongoose";
 
 // Create new Order   =>  /api/order
 export const newOrder = catchAsyncErrors(async (req: NextRequest) => {
@@ -46,7 +45,7 @@ export const updateOrder = catchAsyncErrors(
     const { id } = await params;
     const body = await req.json();
 
-    const { gstin, billingName, ...billingAddress } = body?.billingAddress;
+    const { ...billingAddress } = body?.billingAddress;
 
     const order = await OrderDetails.findByIdAndUpdate(id, {
       $set: {
@@ -55,9 +54,7 @@ export const updateOrder = catchAsyncErrors(
         scheduleDate: body?.scheduleDate,
         shippingAddress: body?.shippingAddress,
         orderStatus: "Initiated",
-        gstin,
-        billingName,
-        billingAddress: billingAddress,
+        billingAddress,
       },
     });
 
@@ -85,7 +82,7 @@ export const uploadProductImages = catchAsyncErrors(
       throw new ErrorHandler("Bad request, please select image", 400);
     }
 
-    const uploader = (images: ImageItem[]) =>
+    const uploader = (images: string) =>
       upload_file(images, "office_chair_app/product", "image");
     const urls = await Promise.all(body.images.map(uploader));
     order?.productImages?.push(...urls);
@@ -104,7 +101,7 @@ export const deleteProductImage = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { orderId: string } }) => {
     const { orderId } = await params;
     const body = await req.json();
-    console.log("body===>>>>", body);
+    // console.log("body===>>>>", body);
     const order = await OrderDetails.findById(orderId);
 
     if (!order) {
@@ -112,12 +109,14 @@ export const deleteProductImage = catchAsyncErrors(
     }
 
     const isDeleted = await delete_file(body.public_id);
-    console.log(isDeleted);
+    // console.log(isDeleted);
 
     if (isDeleted) {
-      order.productImages = order?.productImages.filter(
-        (img: IImage) => img.public_id !== body.public_id
-      );
+      order.productImages = order?.productImages
+        ? order?.productImages.filter(
+            (img: IImage) => img.public_id !== body.public_id
+          )
+        : [];
     }
 
     await order.save();
@@ -320,13 +319,13 @@ export const getOrderByIdAdmin = catchAsyncErrors(
     }
 
     await order?.populate("user");
-    const workService = await WorkService.findOne({
-      serviceCode: order?.serviceCode,
-    });
+    // const workService = await WorkService.findOne({
+    //   serviceCode: order?.serviceCode,
+    // });
 
     return NextResponse.json({
       success: true,
-      data: { order, workService },
+      data: { order },
     });
   }
 );
@@ -356,14 +355,20 @@ export const genrateInvoice = catchAsyncErrors(
       order.orderNumber = counter.sequenceValue;
       order.scheduleDate = body?.servicingDate;
       order.orderStatus = "Verified";
+      await order.save();
+
+      return NextResponse.json({
+        success: true,
+        data: order,
+      });
+    } else {
+      return NextResponse.json({
+        success: false,
+        data: {
+          error: "something went wrong",
+        },
+      });
     }
-
-    await order.save();
-
-    return NextResponse.json({
-      success: true,
-      data: order,
-    });
   }
 );
 
@@ -418,26 +423,23 @@ export const uploadInvoiceImages = catchAsyncErrors(
       "office_chair_app/invoices",
       "image"
     );
-
+    //@ts-ignore
     order.quotation.push(uploaded);
 
     await order.save();
-    console.log("uploaded.url===>>>", uploaded.url);
-    console.log("uploaded.url===>>>", order.user?.name);
+    if (order.user && !(order.user instanceof mongoose.Types.ObjectId)) {
+      const message = emailUserInvoiceTemplate(order.user.name, uploaded.url);
 
-    const message = emailUserInvoiceTemplate(order.user.name, uploaded.url);
-
-    try {
-      await sendEmail({
-        email: order.user.email,
-        subject: "ZHelps | Quotation/Estimate Generated",
-        message,
-      });
-    } catch (error: unknown) {
-      console.log("error===>>>", error);
-      throw new ErrorHandler((error as Error)?.message, 500);
+      try {
+        await sendEmail({
+          email: order?.user?.email,
+          subject: "ZHelps | Quotation/Estimate Generated",
+          message,
+        });
+      } catch (error: unknown) {
+        throw new ErrorHandler((error as Error)?.message, 500);
+      }
     }
-
     return NextResponse.json({
       success: true,
       data: {

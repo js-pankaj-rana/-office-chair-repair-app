@@ -58,14 +58,14 @@ export const handleFieldClassName = (fieldName: string): string => {
 };
 
 export const calculateEstimate = (
-  rate: string,
-  unit: string,
-  gstPercentage: string,
+  rate: number,
+  unit: number,
+  gstPercentage: number,
   businessState: string,
   billingState: string
 ) => {
-  const servicing: number = parseInt(rate) * parseInt(unit);
-  const gstAmount = (servicing * parseInt(gstPercentage)) / 100;
+  const servicing: number = rate * unit;
+  const gstAmount = (servicing * gstPercentage) / 100;
 
   const data = {
     cgst: businessState === billingState ? (gstAmount / 2).toFixed(2) : 0,

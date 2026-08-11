@@ -1,4 +1,4 @@
-import { IEstimatePrice } from "@/backend/models/orderdetails";
+import { IEstimatePrice } from "@/backend/models/invoices";
 
 export interface IFieldConfig {
   label: string;
@@ -27,21 +27,21 @@ export const ORDER_ESTIMATION_FIELDS: IFieldConfig[] = [
     label: "CGST",
     name: "cgst",
     readOnly: true,
-    formatter: (value) => parseInt(value).toFixed(2),
+    formatter: (value) => Number(value).toFixed(2),
   },
   {
     label: "SGST",
     name: "sgst",
     type: "number",
     readOnly: true,
-    formatter: (value) => parseInt(value).toFixed(2),
+    formatter: (value) => Number(value).toFixed(2),
   },
   {
     label: "IGST",
     name: "igst",
     type: "number",
     readOnly: true,
-    formatter: (value) => parseInt(value).toFixed(2),
+    formatter: (value) => Number(value).toFixed(2),
   },
   {
     label: "@Rate",
@@ -65,6 +65,6 @@ export const ORDER_ESTIMATION_FIELDS: IFieldConfig[] = [
     name: "totalPrice",
     type: "number",
     readOnly: true,
-    formatter: (value) => value.toFixed(2),
+    formatter: (value) => Number(value).toFixed(2),
   },
 ];

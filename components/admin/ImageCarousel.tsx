@@ -1,23 +1,23 @@
 "use client";
 
+import { IImage } from "@/backend/models/orderdetails";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Carousel, Button } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
-import toast from "react-hot-toast";
 
-export interface IProductImage {
-  _id: string;
-  public_id: string;
-  url: string;
+type IProductImage = IImage;
+interface IDeletImage {
+  orderId: string | unknown;
+  body: {
+    public_id: string;
+  };
 }
 
 interface Props {
   images: IProductImage[];
-  onDelete: (image: IProductImage) => void;
+  onDelete: (reqPayload: IDeletImage) => void;
   isImgDeleting: boolean;
-  deleteImgError: string;
-  isImgDeleteSuccess: boolean;
   orderId: unknown | string;
   orderStatus: "Start" | "Initiated" | "Verified" | "Cancelled" | "Successful";
 }
@@ -26,8 +26,6 @@ export default function ImageCarousel({
   images,
   onDelete,
   isImgDeleting,
-  deleteImgError,
-  isImgDeleteSuccess,
   orderId,
   orderStatus,
 }: Props) {
@@ -53,8 +51,6 @@ export default function ImageCarousel({
     };
     onDelete(reqPayload);
   };
-  // deleteImgError && toast.error(deleteImgError);
-  // isImgDeleteSuccess && toast.success("Images has been deleted.");
 
   return (
     <Carousel
@@ -69,7 +65,7 @@ export default function ImageCarousel({
           return;
         }
         return (
-          <Carousel.Item key={image._id}>
+          <Carousel.Item key={`${image._id}`}>
             <div className="position-relative">
               <div className="product-images">
                 <Image
