@@ -19,7 +19,6 @@ const UpdateProfile = () => {
   const initialLoad = useRef(false);
 
   const { user: currentUser } = useAppSelector((state) => state.auth);
-
   const [profileUpdate, setProfileUpdate] = useState({
     name: "",
     email: "",
@@ -39,6 +38,7 @@ const UpdateProfile = () => {
         email: currentUser.email,
         phone: currentUser.phone,
       });
+      console.log("currentUser===>>>", currentUser);
       initialLoad.current = false;
     }
   }, [currentUser]);

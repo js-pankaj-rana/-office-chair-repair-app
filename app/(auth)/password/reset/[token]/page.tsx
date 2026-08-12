@@ -6,13 +6,14 @@ export const metadata = {
 };
 
 interface Props {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }
 
-const NewPasswordPage = ({ params }: Props) => {
+const NewPasswordPage = async ({ params }: Props) => {
+  const { token } = await params;
   return (
     <div>
-      <NewPassword token={params?.token} />
+      <NewPassword token={token} />
     </div>
   );
 };

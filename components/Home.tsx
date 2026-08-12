@@ -14,14 +14,14 @@ import BookingTimeline from "./home/BookingTimeline";
 import Testimonials from "./home/Testimonials";
 
 const Home: React.FC = () => {
-  const [hasCtaPress, setHasCtaPress] = useState(false);
+  // const [hasCtaPress, setHasCtaPress] = useState(false);
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
 
   const { user } = useAppSelector((state) => state.auth);
 
   const handleBooking = async () => {
-    if (hasCtaPress) return;
+    // if (hasCtaPress) return;
     const userInfo = await user;
     if (!userInfo) {
       router.push("/login");
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
     } else {
       setShowModal(true);
     }
-    setHasCtaPress(true);
+    // setHasCtaPress(true);
   };
 
   return (
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
       />
 
       {/* Hero Section */}
-      <HeroShot handleBooking={handleBooking} hasCtaPress={hasCtaPress} />
+      <HeroShot handleBooking={handleBooking} />
       {/* Services */}
       <section className="py-5 bg-light">
         <div className="container">

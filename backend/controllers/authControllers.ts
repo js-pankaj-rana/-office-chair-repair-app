@@ -321,12 +321,13 @@ export const forgotPassword = catchAsyncErrors(async (req: NextRequest) => {
 // Reset password  =>  /api/password/reset/:token
 export const resetPassword = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { token: string } }) => {
+    const { token } = await params;
     const body = await req.json();
 
     // Hash the token
     const resetPasswordToken = crypto
       .createHash("sha256")
-      .update(params.token)
+      .update(token)
       .digest("hex");
 
     const user = await User.findOne({

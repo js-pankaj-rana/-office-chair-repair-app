@@ -3,10 +3,10 @@ import { HERO_SHOT } from "@/constants/heroshot";
 
 interface Props {
   handleBooking: () => void;
-  hasCtaPress: boolean;
+  // hasCtaPress: boolean;
 }
 
-export default function HeroShot({ handleBooking, hasCtaPress }: Props) {
+export default function HeroShot({ handleBooking }: Props) {
   const { badge, title, description, ctaText, stats } = HERO_SHOT;
 
   return (
@@ -27,7 +27,7 @@ export default function HeroShot({ handleBooking, hasCtaPress }: Props) {
             <div className="d-flex flex-wrap gap-3">
               <button
                 className="btn btn-danger btn-lg px-4 booking-button"
-                disabled={hasCtaPress}
+                // disabled={hasCtaPress}
                 onClick={handleBooking}
               >
                 {ctaText}
