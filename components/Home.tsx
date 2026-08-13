@@ -28,7 +28,7 @@ const Home: React.FC = () => {
       return;
     }
     const { address } = userInfo;
-    if (address.length > 0) {
+    if (address && address.length > 0) {
       router.push("/order");
     } else {
       setShowModal(true);
