@@ -73,7 +73,7 @@ const handler = NextAuth({
       //@ts-ignore
       delete session.user.password;
 
-      return session;
+      return Promise.resolve(session);
     },
   },
 
