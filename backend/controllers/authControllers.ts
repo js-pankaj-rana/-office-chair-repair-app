@@ -3,8 +3,8 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import User, { IAddress } from "../models/user";
 import ErrorHandler from "../utils/errorHandler";
 import { delete_file, upload_file } from "../utils/cloudinary";
-import { resetPasswordHTMLTemplate } from "../utils/emailTemplates";
-import { emailUserRegistrationTemplate } from "../utils/emailRegistrationTemplate";
+import { resetPasswordTemplate } from "../mailerTemplates/resetPasswordTemplate";
+import { registrationTemplate } from "../mailerTemplates/registrationTemplate";
 
 import sendEmail from "../utils/sendEmail";
 import { Types } from "mongoose";
@@ -26,13 +26,10 @@ export const registerUser = catchAsyncErrors(async (req: NextRequest) => {
   const emailVerificationToken = user.emailVerificationToken();
   await user.save();
   const mailVerficationUrl = `${process.env.API_URL}/email/verification/${emailVerificationToken}`;
-
-  console.log("mailverficationLink=====>>>>>", mailVerficationUrl);
-
-  const message = emailUserRegistrationTemplate(
+  const message = registrationTemplate(
     user?.name,
     process.env.APP_NAME ?? "ChairCare",
-    process.env.SUPPORT_EMAIL ?? "admin@zhelps.in",
+    process.env.API_URL ?? "www.zhelps.in",
     mailVerficationUrl
   );
 
@@ -295,12 +292,17 @@ export const forgotPassword = catchAsyncErrors(async (req: NextRequest) => {
   // Create reset password url
   const resetUrl = `${process.env.API_URL}/password/reset/${resetToken}`;
 
-  const message = resetPasswordHTMLTemplate(user?.name, resetUrl);
+  const message = resetPasswordTemplate(
+    user?.name,
+    resetUrl,
+    process.env.APP_NAME,
+    process.env.API_URL
+  );
 
   try {
     await sendEmail({
       email: user.email,
-      subject: "ZHelp | Chair services Password Recovery",
+      subject: "ZHelps | Password Reset",
       message,
     });
   } catch (error: unknown) {
@@ -413,8 +415,7 @@ export const resetEmail = catchAsyncErrors(
     const emailVerificationToken = user.emailVerificationToken();
     await user.save();
     const mailVerficationUrl = `${process.env.API_URL}/email/verification/${emailVerificationToken}`;
-    console.log("======>>>>>", mailVerficationUrl);
-    const message = emailUserRegistrationTemplate(
+    const message = registrationTemplate(
       user?.name,
       process.env.APP_NAME ?? "ChairCare",
       process.env.SUPPORT_EMAIL ?? "admin@zhelps.in",

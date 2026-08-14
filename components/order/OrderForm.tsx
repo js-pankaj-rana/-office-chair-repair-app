@@ -11,6 +11,7 @@ import { IImage, IOrderStatus, IPayment } from "@/backend/models/orderdetails";
 import UploadImages from "./UploadImages";
 import { SingleAddress } from "./SingleAddress";
 import BillingAddress, { BillingAddressData } from "./BillingAddress";
+import EditBillingAddress from "./EditBillingAddress";
 
 interface Props {
   handleSubmit: (any) => void;
@@ -194,6 +195,13 @@ const OrderForm = ({
     handleSubmit(reqPayload);
   };
 
+  const updateBillingSameAsDefault = (value: boolean) => {
+    if (value) {
+      setBillingAddress({ ...addresses[selectedIndex] });
+    }
+    setSameAsShipping(value);
+  };
+
   useEffect(() => {
     if (addresses?.length) {
       setSelectedIndex(
@@ -216,186 +224,183 @@ const OrderForm = ({
         <h3 className="mb-3">{formTitle}</h3>
         <div className="card-body">
           {isBillingAddress ? (
-            <>
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  checked={sameAsShipping}
-                  onChange={(e) => setSameAsShipping(e.target.checked)}
-                />
-
-                <label className="form-check-label">
-                  Billing address same as shipping address
-                </label>
-              </div>
-
-              {billingAddress.addressLine1 && (
-                <BillingAddress
-                  data={billingAddress}
-                  onChange={handleBillingChange}
-                  setIsBillingAddress={setIsBillingAddress}
-                />
-              )}
-            </>
+            <EditBillingAddress
+              billingAddress={billingAddress}
+              shippingAddress={addresses[selectedIndex]}
+              setSameAsShipping={setSameAsShipping}
+              sameAsShipping={sameAsShipping}
+              handleBillingChange={handleBillingChange}
+              setIsBillingAddress={setIsBillingAddress}
+            />
           ) : (
             <form
               onSubmit={customHandleSubmit}
               className={isBillingAddress ? "d-none" : ""}
             >
-              <div className="row">
-                {type !== "create" && (
-                  <div className="col-md-6">
-                    <label className="form-label">Order Number</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={booking.orderNumber}
-                      readOnly
-                    />
-                  </div>
-                )}
-                <div className="col-md-6 row">
-                  <div className="col-md-6">
-                    <label className="form-label">Order Status</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={booking.orderStatus}
-                      disabled
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Schedule Date</label>
-                    <br />
-                    <DatePicker
-                      className="form-control"
-                      selected={servicingDate}
-                      onChange={onDateChange}
-                      minDate={minDate}
-                      maxDate={maxDate}
-                      showTimeSelect
-                      minTime={visitingTime.minTime}
-                      maxTime={visitingTime.maxTime}
-                      dateFormat="dd/MM/yyyy HH:mm"
-                    />
-                    {dateError && (
-                      <div className="text-danger mt-1">{dateError}</div>
-                    )}
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">
-                      No of product (eg. Chair)
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      name="quantityOrdered"
-                      min={1}
-                      value={booking.quantityOrdered}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
+              <div className="container">
+                <div className="row">
                   {type !== "create" && (
                     <div className="col-md-6">
-                      <label className="form-label">Service Code</label>
+                      <label className="form-label">Order Number</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={booking.serviceCode}
-                        disabled
-                      />
-                    </div>
-                  )}
-                  {type !== "create" &&
-                    null
-                    // <div className="col-md-6">
-                    //   <label className="form-label">Payment Info</label>
-                    //   <input
-                    //     type="text"
-                    //     className="form-control"
-                    //     value={booking?.paymentInfo?.status}
-                    //     readOnly
-                    //   />
-                    // </div>
-                  }
-                  <div className="col-md-6">
-                    <label className="form-label">
-                      Product fault description (optional)
-                    </label>
-                    <textarea
-                      className="form-control"
-                      value={booking.faultDescription}
-                      name="faultDescription"
-                      rows={2}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    {addresses && addresses?.length > 0 ? (
-                      <AddressCard
-                        addressProps={{
-                          addresses,
-                          selectedIndex,
-                          setSelectedIndex,
-                        }}
-                      />
-                    ) : (
-                      "Loading..."
-                    )}
-                  </div>
-
-                  <div className="col-md-6">
-                    <div className="d-flex justify-content-between align-items-start my-3">
-                      <h6 className="mb-0">Billing Address</h6>
-                      {billingAddress.addressLine1 && (
-                        <button
-                          className="btn btn-link p-0 text-decoration-none"
-                          onClick={() => setIsBillingAddress(true)}
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </div>
-                    {billingAddress.addressLine1 && (
-                      <SingleAddress address={billingAddress} />
-                    )}
-                  </div>
-
-                  {type !== "create" && (
-                    <div className="col-md-6">
-                      <label className="form-label">Estimated Price</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={booking.orderEstimatedPrice}
+                        value={booking.orderNumber}
                         readOnly
                       />
                     </div>
                   )}
-                </div>
-                <div className="col-md-6">
-                  <div className="row">
-                    <label className="form-label">Upload product images</label>
-                    <UploadImages
-                      imgProps={{
-                        images,
-                        setImages,
-                      }}
-                    />
-                    {imagesError && (
-                      <div className="text-danger mt-1">{imagesError}</div>
-                    )}
+                  <div className="col-md-6">
+                    <div className="row">
+                      <div className="col-md-6">
+                        <label className="form-label">Order Status</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={booking.orderStatus}
+                          disabled
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Schedule Date</label>
+                        <br />
+                        <DatePicker
+                          className="form-control"
+                          selected={servicingDate}
+                          onChange={onDateChange}
+                          minDate={minDate}
+                          maxDate={maxDate}
+                          showTimeSelect
+                          minTime={visitingTime.minTime}
+                          maxTime={visitingTime.maxTime}
+                          dateFormat="dd/MM/yyyy HH:mm"
+                        />
+                        {dateError && (
+                          <div className="text-danger mt-1">{dateError}</div>
+                        )}
+                      </div>
+                      <div className="col-md-6 mt-3">
+                        <label className="form-label">
+                          No of product (eg. Chair)
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="quantityOrdered"
+                          min={1}
+                          value={booking.quantityOrdered}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      {type !== "create" && (
+                        <div className="col-md-6 mt-3">
+                          <label className="form-label">Service Code</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={booking.serviceCode}
+                            disabled
+                          />
+                        </div>
+                      )}
+                      {
+                        type !== "create" && null
+                        // <div className="col-md-6">
+                        //   <label className="form-label">Payment Info</label>
+                        //   <input
+                        //     type="text"
+                        //     className="form-control"
+                        //     value={booking?.paymentInfo?.status}
+                        //     readOnly
+                        //   />
+                        // </div>
+                      }
+
+                      <div className="col-md-6 mt-3">
+                        <label className="form-label">
+                          Product fault description (optional)
+                        </label>
+                        <textarea
+                          className="form-control"
+                          value={booking.faultDescription}
+                          name="faultDescription"
+                          rows={2}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          {addresses && addresses?.length > 0 ? (
+                            <AddressCard
+                              addressProps={{
+                                addresses,
+                                selectedIndex,
+                                setSelectedIndex,
+                              }}
+                            />
+                          ) : (
+                            "Loading..."
+                          )}
+                        </div>
+
+                        <div className="col-md-6">
+                          <div className="d-flex justify-content-between align-items-start my-3">
+                            <h6 className="mb-0">Billing Address</h6>
+                            {billingAddress.addressLine1 && (
+                              <button
+                                className="btn btn-link p-0 text-decoration-none"
+                                onClick={() => setIsBillingAddress(true)}
+                              >
+                                Edit
+                              </button>
+                            )}
+                          </div>
+                          {billingAddress.addressLine1 && (
+                            <SingleAddress address={billingAddress} />
+                          )}
+                        </div>
+                      </div>
+
+                      {type !== "create" && (
+                        <div className="col-md-6">
+                          <label className="form-label">Estimated Price</label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            value={booking.orderEstimatedPrice}
+                            readOnly
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12 mt-5">
-                  <button className="btn btn-primary" disabled={isLoading}>
-                    {isLoading ? <ButtonLoader /> : submitButtonLabel}
-                  </button>
+                  <div className="col-md-6">
+                    <div className="row">
+                      <label className="form-label">
+                        Upload product images
+                      </label>
+                      <UploadImages
+                        imgProps={{
+                          images,
+                          setImages,
+                        }}
+                      />
+                      {imagesError && (
+                        <div className="text-danger mt-1">{imagesError}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="col-md-12 mt-5 text-center">
+                    <button
+                      className="btn btn-brand text-white btn-lg px-3"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? <ButtonLoader /> : submitButtonLabel}
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface Props {
   show: boolean;
@@ -48,18 +49,20 @@ const NavigateAddressModal: React.FC<Props> = ({ show, onClose }) => {
       backdrop="static"
       keyboard={false}
     >
-      <Modal.Header closeButton className="border-0 pb-0">
-        <Modal.Title className="text-warning fw-bold">
-          📍 Address Required
-        </Modal.Title>
-      </Modal.Header>
+      <Modal.Header closeButton className="border-0 pb-0"></Modal.Header>
 
-      <Modal.Body className="text-center py-4">
+      <Modal.Body className="text-center">
+        <h3 className="text-center">Address Required</h3>
         <div
           className="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
-          style={{ width: 80, height: 80 }}
+          style={{ width: 100, height: 100 }}
         >
-          <span style={{ fontSize: 38 }}>🏠</span>
+          <Image
+            src="/images/home-image.png"
+            width={100}
+            height={100}
+            alt="zhelp home"
+          />
         </div>
 
         <h5 className="fw-semibold mb-3">Before booking your order</h5>
@@ -69,7 +72,7 @@ const NavigateAddressModal: React.FC<Props> = ({ show, onClose }) => {
           proceeding with your new order booking.
         </p>
 
-        <div className="alert alert-warning mt-4 mb-0">
+        <div className="alert alert-warning text-black mt-4 mb-0">
           This dialog will close automatically in <strong>{seconds}s</strong>
         </div>
       </Modal.Body>
@@ -79,7 +82,11 @@ const NavigateAddressModal: React.FC<Props> = ({ show, onClose }) => {
           Cancel
         </Button>
 
-        <Button variant="primary" onClick={handleNavigate}>
+        <Button
+          variant="primary"
+          className="btn-brand"
+          onClick={handleNavigate}
+        >
           OK
         </Button>
       </Modal.Footer>

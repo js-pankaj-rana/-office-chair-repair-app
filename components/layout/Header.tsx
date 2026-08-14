@@ -9,11 +9,13 @@ import { isMobileDevice } from "@/helpers/utils";
 import Logo from "../logo/Logo";
 import MLogo from "../logo/MLogo";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { data } = useSession();
+  const pathName = usePathname();
   useEffect(() => {
     if (data) {
       dispatch(setUser(data?.user));
@@ -93,12 +95,23 @@ const Header = () => {
                 </div>
               )}
               {data === null && (
-                <Link
-                  href="/login"
-                  className="btn btn-danger px-4 text-white login-header-btn float-right"
-                >
-                  Login
-                </Link>
+                <>
+                  {pathName === "/register" ? (
+                    <Link
+                      href="/login"
+                      className="btn btn-brand px-4 text-white login-header-btn float-right"
+                    >
+                      Login
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/register"
+                      className="btn btn-brand px-4 text-white login-header-btn float-right"
+                    >
+                      Register
+                    </Link>
+                  )}
+                </>
               )}
             </>
           )}

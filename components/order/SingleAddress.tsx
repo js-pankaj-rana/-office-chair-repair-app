@@ -8,7 +8,7 @@ export const SingleAddress = ({ address }: IProps) => {
   const { addressLine1, addressLine2, city, state, postalCode } = address;
 
   return (
-    <div className="border p-3 rounded-3 card h-100">
+    <div className="border p-3 rounded-3">
       {address?.gstin ? (
         <p className="mb-1 fw-medium">GSTIN: {address?.gstin}</p>
       ) : (

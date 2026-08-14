@@ -5,8 +5,9 @@ import ErrorHandler from "../utils/errorHandler";
 import { upload_file, delete_file } from "../utils/cloudinary";
 import { OrderCounter } from "../utils/counter";
 import sendEmail from "../utils/sendEmail";
-import { emailUserInvoiceTemplate } from "../utils/emailUserInvoiceTemplate";
+import { userInvoiceTemplate } from "../mailerTemplates/userInvoiceTemplate";
 import mongoose from "mongoose";
+import Invoice from "../models/invoices";
 
 // Create new Order   =>  /api/order
 export const newOrder = catchAsyncErrors(async (req: NextRequest) => {
@@ -418,6 +419,19 @@ export const uploadInvoiceImages = catchAsyncErrors(
       throw new ErrorHandler("Bad request, please select image", 400);
     }
 
+    const invoiceData = await Invoice.findOne({
+      orderDetail: id,
+    });
+
+    let totalPrice = 0;
+
+    if (invoiceData) {
+      const { invoice } = invoiceData;
+      totalPrice = invoice.reduce((total, item) => total + item.totalPrice, 0);
+    }
+    const minValue = totalPrice * 0.25;
+    let minAmount = minValue < 350 ? 350.0 : minValue.toFixed(2);
+
     const uploaded = await upload_file(
       body.images[0].file,
       "office_chair_app/invoices",
@@ -428,12 +442,22 @@ export const uploadInvoiceImages = catchAsyncErrors(
 
     await order.save();
     if (order.user && !(order.user instanceof mongoose.Types.ObjectId)) {
-      const message = emailUserInvoiceTemplate(order.user.name, uploaded.url);
+      //ToDO generate payment link paymentLink;
+      const message = userInvoiceTemplate(
+        order.user.name,
+        uploaded.url,
+        "www.zhelps.in",
+        totalPrice ?? 1000,
+        Number(minAmount),
+        "zhelps.in",
+        process.env.API_URL
+      );
 
       try {
         await sendEmail({
           email: order?.user?.email,
-          subject: "ZHelps | Quotation/Estimate Generated",
+          subject:
+            "ZHelps | Service Request Approved – Quotation & Payment Required",
           message,
         });
       } catch (error: unknown) {

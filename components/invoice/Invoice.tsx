@@ -136,7 +136,10 @@ const Invoice = () => {
       {data && invoiceData ? (
         <>
           <div className="text-end">
-            <button className="btn btn-brand col-md-5" onClick={handleDownload}>
+            <button
+              className="btn btn-brand text-white"
+              onClick={handleDownload}
+            >
               Generate Invoice and Send Email to Customer
             </button>
           </div>

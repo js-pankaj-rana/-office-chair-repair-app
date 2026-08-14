@@ -97,7 +97,7 @@ export default function InvoiceDetails({ invoiceData }: InvoiceDetailsProps) {
         <tfoot>
           {/* GST Total */}
           <tr>
-            <td colSpan={isIntraState ? 8 : 6} className="text-end fw-bold">
+            <td colSpan={isIntraState ? 7 : 6} className="text-end fw-bold">
               Total GST
             </td>
 

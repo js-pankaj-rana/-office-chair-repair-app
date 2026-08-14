@@ -17,22 +17,24 @@ interface BillingAddressProps {
   data: BillingAddressData;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setIsBillingAddress: (arg: boolean) => void;
+  sameAsShipping: boolean;
 }
 
 const BillingAddress: React.FC<BillingAddressProps> = ({
   data,
   onChange,
   setIsBillingAddress,
+  sameAsShipping,
 }) => {
   return (
     <div className="row">
       <div className="col-md-6">
-        <div className="card shadow-sm border-0 mt-4">
-          <div className="card-header bg-light">
+        <div className="card border-0 mt-4">
+          <div>
             <div className="d-flex justify-content-between">
               <h3 className="mb-0">Billing Address</h3>
               <button
-                className="d-flex align-items-start align-items-center mb-2"
+                className="d-flex btn btn-link align-items-start align-items-center mb-2"
                 onClick={() => setIsBillingAddress(false)}
               >
                 <Image
@@ -60,6 +62,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.billingName}
                   onChange={onChange}
                   placeholder="Enter Business Name"
+                  disabled={sameAsShipping}
                 />
               </div>
 
@@ -75,6 +78,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.gstin}
                   onChange={onChange}
                   placeholder="22AAAAA0000A1Z5"
+                  disabled={sameAsShipping}
                 />
               </div>
 
@@ -90,6 +94,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.addressLine1}
                   onChange={onChange}
                   placeholder="House No, Street"
+                  disabled={sameAsShipping}
                   required
                 />
               </div>
@@ -104,6 +109,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.addressLine2}
                   onChange={onChange}
                   placeholder="Apartment, Landmark"
+                  disabled={sameAsShipping}
                 />
               </div>
 
@@ -119,6 +125,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.city}
                   onChange={onChange}
                   placeholder="City"
+                  disabled={sameAsShipping}
                   required
                 />
               </div>
@@ -135,6 +142,7 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.state}
                   onChange={onChange}
                   placeholder="State"
+                  disabled={sameAsShipping}
                   required
                 />
               </div>
@@ -151,11 +159,22 @@ const BillingAddress: React.FC<BillingAddressProps> = ({
                   value={data.postalCode}
                   onChange={onChange}
                   placeholder="Postal Code"
+                  disabled={sameAsShipping}
                   required
                 />
               </div>
             </div>
           </div>
+          {!sameAsShipping && (
+            <div className="text-center">
+              <button
+                className="btn btn-brand text-white px-4"
+                onClick={() => setIsBillingAddress(false)}
+              >
+                Save
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

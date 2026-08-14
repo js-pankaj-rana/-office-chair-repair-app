@@ -2,12 +2,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import Invoice from "../models/invoices";
 import ErrorHandler from "../utils/errorHandler";
+import OrderDetails from "../models/orderdetails";
+import { OrderCounter } from "../utils/counter";
 
 // Create Invoice => /api/invoice
 export const createInvoice = catchAsyncErrors(async (req: NextRequest) => {
   //orderDetail:ID should require;
   const body = await req.json();
+  const orderId = body.orderDetail;
   const invoice = await Invoice.create(body);
+
+  const order = await OrderDetails.findById(orderId);
+
+  if (order) {
+    const counter = await OrderCounter.findByIdAndUpdate(
+      "orderNumber",
+      { $inc: { sequenceValue: 1 } },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    order.orderNumber = counter.sequenceValue;
+    order.orderStatus = "Verified";
+    await order.save();
+  }
 
   return NextResponse.json({
     success: true,
