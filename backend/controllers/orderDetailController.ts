@@ -324,48 +324,6 @@ export const getOrderByIdAdmin = catchAsyncErrors(
   }
 );
 
-// Get single order by ID   =>  /api/generate_invoice/:id
-// Update single order by ID   =>  /api/order/:id
-
-export const genrateInvoice = catchAsyncErrors(
-  async (req: NextRequest, { params }: { params: { id: string } }) => {
-    const { id } = await params;
-
-    const body = await req.json();
-
-    const order = await OrderDetails.findById(id);
-
-    if (order) {
-      await order.populate("user");
-      const counter = await OrderCounter.findByIdAndUpdate(
-        "orderNumber",
-        { $inc: { sequenceValue: 1 } },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-
-      order.orderNumber = counter.sequenceValue;
-      order.scheduleDate = body?.servicingDate;
-      order.orderStatus = "Verified";
-      await order.save();
-
-      return NextResponse.json({
-        success: true,
-        data: order,
-      });
-    } else {
-      return NextResponse.json({
-        success: false,
-        data: {
-          error: "something went wrong",
-        },
-      });
-    }
-  }
-);
-
 // Get single order by ID   =>  /api/quotation/:id
 // Get single order by ID   =>  /api/admin/order/:id
 

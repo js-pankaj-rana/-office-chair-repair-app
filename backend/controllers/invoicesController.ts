@@ -33,19 +33,23 @@ export const createInvoice = catchAsyncErrors(async (req: NextRequest) => {
 
   const { email, phone, name } = user;
 
-  const counter = await OrderCounter.findByIdAndUpdate(
-    "orderNumber",
+  const counter = await OrderCounter.findOneAndUpdate(
+    { name: "orderNumber" },
     { $inc: { sequenceValue: 1 } },
     {
       returnDocument: "after",
+      upsert: true,
     }
   );
+
   if (!counter) {
     throw new ErrorHandler("Unable to generate order number", 500);
   }
 
-  order.orderNumber = counter.sequenceValue;
+  order.orderNumber = counter!.sequenceValue;
   order.orderStatus = "Verified";
+
+  await order.save();
 
   const smepayBaseURL = process.env.SME_PAY_URL || "https://staging.smepay.in";
   const smePaymentAuth = await fetch(`${smepayBaseURL}/api/wiz/external/auth`, {
