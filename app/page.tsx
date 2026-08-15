@@ -6,10 +6,5 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  return (
-    <>
-      <Home />
-      <Analytics />
-    </>
-  );
+  return <Home />;
 }

@@ -11,16 +11,12 @@ import Script from "next/script";
 import { GlobalProvider } from "./GlobalProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin"],
 });
-
-// export const metadata: Metadata = {
-//   title: "ZHelps Chair Services",
-//   description: "",
-// };
 
 export const metadata: Metadata = {
   title: "Office Chair Repair Services | Expert Chair Repair & Spare Parts",
@@ -72,6 +68,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
+          <Analytics />
         </GlobalProvider>
 
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></Script>
