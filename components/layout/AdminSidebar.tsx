@@ -8,11 +8,11 @@ const AdminSidebar = () => {
   const pathname = usePathname();
 
   const menuItem = [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: "fas fa-tachometer-alt",
-    },
+    // {
+    //   name: "Dashboard",
+    //   url: "/dashboard",
+    //   icon: "fas fa-tachometer-alt",
+    // },
     {
       name: "Bookings",
       url: "/bookings",
