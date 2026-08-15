@@ -37,7 +37,6 @@ export const createInvoice = catchAsyncErrors(async (req: NextRequest) => {
     "orderNumber",
     { $inc: { sequenceValue: 1 } },
     {
-      new: true,
       returnDocument: "after",
     }
   );
