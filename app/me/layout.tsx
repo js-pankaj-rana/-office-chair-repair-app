@@ -8,8 +8,8 @@ interface Props {
 const UserLayout = ({ children }: Props) => {
   return (
     <div>
-      <div className="mt-2 mb-4 bg-light py-4">
-        <h2 className="text-secondary text-center">User Settings</h2>
+      <div className="mt-2 mb-4 py-3 border-bottom">
+        <h3 className="text-brand text-center">User management</h3>
       </div>
 
       <div className="container">

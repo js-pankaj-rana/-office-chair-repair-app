@@ -42,7 +42,9 @@ const UploadAvatar = () => {
     if (isSuccess) {
       //@ts-ignore
       updateSession();
-
+      toast.success(
+        "Profile picture has been uploaded. Avatar will reflect after re-login"
+      );
       router.refresh();
     }
   }, [user, error, isSuccess]);
@@ -104,7 +106,7 @@ const UploadAvatar = () => {
 
         <button
           type="submit"
-          className="btn form-btn w-100 py-2"
+          className="btn btn-brand text-white py-2 mt-4"
           disabled={isLoading}
         >
           {isLoading ? <ButtonLoader /> : "Upload"}

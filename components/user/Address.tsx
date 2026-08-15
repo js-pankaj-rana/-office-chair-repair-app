@@ -142,10 +142,10 @@ const Address = ({
               </div>
             </div>
 
-            <div className="d-flex justify-content-end gap-2">
+            <div className="d-flex justify-content-center gap-2">
               <button
                 type="submit"
-                className="btn form-btn w-100 py-2"
+                className="btn btn-brand text-white px-3 mt-4"
                 disabled={isLoading}
               >
                 {isLoading ? <ButtonLoader /> : submitButtonLabel}

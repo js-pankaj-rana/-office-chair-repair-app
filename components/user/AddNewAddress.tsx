@@ -20,15 +20,16 @@ const AddNewAddress: React.FC = () => {
   const [addAddress, { isLoading, isSuccess, error }] = useAddAddressMutation();
 
   const [updateSession, { data }] = useLazyUpdateSessionQuery();
-
-  const [address, setAddress] = useState<IAddressForm>({
+  const initialAddress = {
     addressLine1: "",
     addressLine2: undefined,
     city: "",
     postalCode: "",
     state: "",
     isDefault: false,
-  });
+  };
+
+  const [address, setAddress] = useState<IAddressForm>(initialAddress);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,6 +68,7 @@ const AddNewAddress: React.FC = () => {
       updateSession();
       router.refresh();
       toast.success("New address added successfully");
+      setAddress(initialAddress);
     }
   }, [isSuccess]);
 
@@ -96,7 +98,7 @@ const AddNewAddress: React.FC = () => {
       handleSubmit={handleSubmit}
       address={address}
       isLoading={isLoading}
-      submitButtonLabel="Add Address"
+      submitButtonLabel="Save Address"
       formTitle="Add new address"
     />
   );

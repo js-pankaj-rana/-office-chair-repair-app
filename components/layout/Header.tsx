@@ -96,19 +96,19 @@ const Header = () => {
               )}
               {data === null && (
                 <>
-                  {pathName === "/register" ? (
-                    <Link
-                      href="/login"
-                      className="btn btn-brand px-4 text-white login-header-btn float-right"
-                    >
-                      Login
-                    </Link>
-                  ) : (
+                  {pathName === "/login" ? (
                     <Link
                       href="/register"
                       className="btn btn-brand px-4 text-white login-header-btn float-right"
                     >
                       Register
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="btn btn-brand px-4 text-white login-header-btn float-right"
+                    >
+                      Login
                     </Link>
                   )}
                 </>

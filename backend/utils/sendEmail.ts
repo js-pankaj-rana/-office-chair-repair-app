@@ -23,6 +23,5 @@ export default async (options: EmailOptions) => {
     html: options.message,
   };
 
-  const response = await transport.sendMail(message);
-  console.log(response);
+  await transport.sendMail(message);
 };

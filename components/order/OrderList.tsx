@@ -55,12 +55,6 @@ export default function OrderList() {
   };
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (orderResponseData) {
-  //     console.log(orderResponseData?.data);
-  //   }
-  // }, [orderResponseData]);
-
   return (
     <div className="container pt-4">
       <h3 className="mb-4">Your order details</h3>

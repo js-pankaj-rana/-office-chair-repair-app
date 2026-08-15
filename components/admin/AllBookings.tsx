@@ -94,6 +94,9 @@ const AllBookings = () => {
         quantityOrdered,
         createdAt,
       } = booking;
+      if (booking.orderStatus === "Verified") {
+        return;
+      }
 
       data?.rows?.push({
         id: _id,

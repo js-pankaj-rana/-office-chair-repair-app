@@ -102,7 +102,6 @@ export const deleteProductImage = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { orderId: string } }) => {
     const { orderId } = await params;
     const body = await req.json();
-    // console.log("body===>>>>", body);
     const order = await OrderDetails.findById(orderId);
 
     if (!order) {
@@ -110,7 +109,6 @@ export const deleteProductImage = catchAsyncErrors(
     }
 
     const isDeleted = await delete_file(body.public_id);
-    // console.log(isDeleted);
 
     if (isDeleted) {
       order.productImages = order?.productImages
@@ -318,12 +316,7 @@ export const getOrderByIdAdmin = catchAsyncErrors(
     if (!order) {
       throw new ErrorHandler("You order detail is missing", 403);
     }
-
     await order?.populate("user");
-    // const workService = await WorkService.findOne({
-    //   serviceCode: order?.serviceCode,
-    // });
-
     return NextResponse.json({
       success: true,
       data: { order },
@@ -380,28 +373,20 @@ export const genrateEstimation = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const { id } = await params;
     const body = await req.json();
-    const order = await OrderDetails.findById(id);
+    const order = await OrderDetails.findByIdAndUpdate(id, {
+      $set: {
+        scheduleDate: body?.servicingDate,
+      },
+    });
     if (!order) {
       throw new ErrorHandler("You order detail is missing", 403);
-    }
-    if (order) {
-      const counter = await OrderCounter.findByIdAndUpdate(
-        "orderNumber",
-        { $inc: { sequenceValue: 1 } },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      order.orderNumber = counter.sequenceValue;
-      order.orderStatus = "Verified";
-      order.scheduleDate = body?.servicingDate;
-      await order.save();
     }
 
     return NextResponse.json({
       success: true,
-      data: order,
+      data: {
+        message: "Schedule date has been updated.",
+      },
     });
   }
 );
@@ -427,10 +412,14 @@ export const uploadInvoiceImages = catchAsyncErrors(
 
     if (invoiceData) {
       const { invoice } = invoiceData;
-      totalPrice = invoice.reduce((total, item) => total + item.totalPrice, 0);
+      totalPrice = Number(
+        Math.round(
+          invoice.reduce((total, item) => total + item.totalPrice, 0)
+        ).toFixed(2)
+      );
     }
     const minValue = totalPrice * 0.25;
-    let minAmount = minValue < 350 ? 350.0 : minValue.toFixed(2);
+    let minAmount = minValue < 350 ? 350.0 : Math.round(minValue).toFixed(2);
 
     const uploaded = await upload_file(
       body.images[0].file,
@@ -442,14 +431,13 @@ export const uploadInvoiceImages = catchAsyncErrors(
 
     await order.save();
     if (order.user && !(order.user instanceof mongoose.Types.ObjectId)) {
-      //ToDO generate payment link paymentLink;
       const message = userInvoiceTemplate(
         order.user.name,
         uploaded.url,
-        "www.zhelps.in",
+        order.paymentInfo.at(-1).payment_url,
         totalPrice ?? 1000,
-        Number(minAmount),
-        "zhelps.in",
+        order.paymentInfo.at(-1).amount,
+        process.env.APP_NAME,
         process.env.API_URL
       );
 

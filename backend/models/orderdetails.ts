@@ -26,9 +26,11 @@ export interface ImageItem {
   preview: string;
 }
 
-export interface IPayment extends Document {
-  id: string;
-  status: string;
+export interface IPayment {
+  amount: number;
+  payment_url: string;
+  payment_status: string;
+  ref_id: string;
 }
 
 export interface IOrder {
@@ -91,16 +93,26 @@ const orderDetailsSchema = new Schema<IOrderDetail>(
     paidAt: {
       type: Date,
     },
-
-    paymentInfo: {
-      id: {
-        type: String,
+    paymentInfo: [
+      {
+        amount: {
+          type: Number,
+          required: true,
+        },
+        payment_url: {
+          type: String,
+          required: true,
+        },
+        payment_status: {
+          type: String,
+          required: true,
+        },
+        ref_id: {
+          type: String,
+          required: true,
+        },
       },
-      status: {
-        type: String,
-      },
-    },
-
+    ],
     productImages: [
       {
         public_id: {

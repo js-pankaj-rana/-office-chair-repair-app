@@ -19,6 +19,5 @@ export default async function GetOrderById({
   params: { id: string };
 }) {
   const { id } = await params;
-  console.log("id", id);
   return <OrderDetail id={id} />;
 }

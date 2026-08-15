@@ -199,11 +199,14 @@ const OrderReviewModal: React.FC<Props> = ({
         orderDetail: order._id,
         invoice: [...estimateCollection],
       };
-      const reqPayloadInvoieAdmin = {
-        servicingDate,
-      };
 
-      genrateInvoiceAdmin(reqPayloadInvoieAdmin);
+      if (scheduleDate.toString() !== servicingDate.toString()) {
+        const reqPayloadInvoieAdmin = {
+          id: order._id,
+          servicingDate,
+        };
+        genrateInvoiceAdmin(reqPayloadInvoieAdmin);
+      }
       createInvoice(reqPayloadInvoice);
     }
   };

@@ -38,7 +38,6 @@ const UpdateProfile = () => {
         email: currentUser.email,
         phone: currentUser.phone,
       });
-      console.log("currentUser===>>>", currentUser);
       initialLoad.current = false;
     }
   }, [currentUser]);
@@ -98,6 +97,7 @@ const UpdateProfile = () => {
             name="name"
             value={profileUpdate.name}
             onChange={changeHandler}
+            disabled={true}
           />
         </div>
 
@@ -112,6 +112,7 @@ const UpdateProfile = () => {
             name="email"
             value={profileUpdate.email}
             onChange={changeHandler}
+            disabled={true}
           />
         </div>
 
@@ -126,16 +127,18 @@ const UpdateProfile = () => {
             name="phone"
             value={profileUpdate.phone}
             onChange={changeHandler}
+            disabled={true}
           />
         </div>
 
-        <button
+        {/* <button
           type="submit"
+          
           className="btn form-btn w-100 py-2"
           disabled={isLoading}
         >
           {isLoading ? <ButtonLoader /> : "UPDATE"}
-        </button>
+        </button> */}
       </form>
     </div>
   );

@@ -23,7 +23,6 @@ const upload_file = (
           reject(error.message);
           return;
         }
-        console.log("resolve", result);
         resolve({
           public_id: result?.public_id,
           url: result.url,

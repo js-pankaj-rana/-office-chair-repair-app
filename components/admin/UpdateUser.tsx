@@ -23,8 +23,6 @@ const UpdateUser = ({ data }: Props) => {
   const [updateUser, { error, isSuccess, isLoading }] = useUpdateUserMutation();
 
   useEffect(() => {
-    console.log(error);
-
     if (error && "data" in error) {
       // @ts-ignore
       toast.error(error?.data?.errMessage);

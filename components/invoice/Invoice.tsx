@@ -92,7 +92,7 @@ const Invoice = () => {
     id ? id : skipToken
   );
 
-  const handleDownload = () => {
+  const sendEmailAndUploadInvoice = () => {
     const input = docRef?.current;
     if (input) {
       html2canvas(input, {
@@ -138,7 +138,7 @@ const Invoice = () => {
           <div className="text-end">
             <button
               className="btn btn-brand text-white"
-              onClick={handleDownload}
+              onClick={sendEmailAndUploadInvoice}
             >
               Generate Invoice and Send Email to Customer
             </button>
