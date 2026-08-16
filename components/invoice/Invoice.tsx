@@ -129,6 +129,7 @@ const Invoice = () => {
 
   useEffect(() => {
     let timeOut = undefined;
+    console.log("====>>>>", invoiceData);
     if (uploadInvoiceError) {
       // @ts-ignore
       toast.error(uploadInvoiceError.data.message);
@@ -142,7 +143,7 @@ const Invoice = () => {
     return () => {
       clearTimeout(timeOut);
     };
-  }, [uploadInvoiceData, uploadInvoiceError]);
+  }, [uploadInvoiceData, uploadInvoiceError, invoiceData]);
 
   return (
     <>
@@ -164,13 +165,10 @@ const Invoice = () => {
             <div className="container-fluid p-0 invoice-wrap mb-5" ref={docRef}>
               <InvoiceHeader />
               <CustomerDetails
-                customerName={invoiceData.data?.order?.user.name}
-                customerEmail={invoiceData.data?.order?.user.email}
-                customerPhone={invoiceData.data?.order?.user.phone}
-                shippingAddress={invoiceData.data?.order?.shippingAddress}
-                billingAddress={invoiceData.data?.order?.billingAddress}
-                orderNumber={invoiceData.data?.order?.orderNumber}
-                gstin={invoiceData.data?.order?.gstin}
+                shippingAddress={invoiceData.data.orderDetail.shippingAddress}
+                billingAddress={invoiceData.data.orderDetail.billingAddress}
+                orderNumber={invoiceData.data.orderDetail.orderNumber}
+                gstin={invoiceData.data?.orderDetail.gstin}
               />
               <InvoiceDetails invoiceData={invoiceData?.data} />
             </div>

@@ -1,4 +1,3 @@
-import Error from "@/app/error";
 import { getAuthHeader } from "@/helpers/authHeader";
 import OrderDetail from "@/components/order/OrderDetail";
 

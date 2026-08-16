@@ -1,9 +1,9 @@
 import { IAddressForm } from "@/backend/models/orderdetails";
 
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
 interface CustomerDetailsProps {
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
   shippingAddress: IAddressForm;
   billingAddress: IAddressForm;
   orderNumber: string;
@@ -11,9 +11,9 @@ interface CustomerDetailsProps {
 }
 
 export default function CustomerDetails({
-  customerName,
-  customerEmail,
-  customerPhone,
+  // customerName,
+  // customerEmail,
+  // customerPhone,
   shippingAddress,
   billingAddress,
   orderNumber,
@@ -37,6 +37,7 @@ export default function CustomerDetails({
     billingName: firmBillingName,
   } = billingAddress || {};
 
+  const user = useSelector((state: RootState) => state.auth.user);
   return (
     <div className="row">
       <div className="container">
@@ -72,15 +73,15 @@ export default function CustomerDetails({
                 )}
                 <tr>
                   <td className="fw-bold">Customer Name: </td>
-                  <td>{billingName ? billingName : customerName}</td>
+                  <td>{billingName ? billingName : user.name}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Customer Email: </td>
-                  <td>{customerEmail}</td>
+                  <td>{user.name}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Customer Phone: </td>
-                  <td>{customerPhone}</td>
+                  <td>{user.phone}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Servicing Address: </td>
