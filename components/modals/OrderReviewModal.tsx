@@ -264,7 +264,7 @@ const OrderReviewModal: React.FC<Props> = ({
   useEffect(() => {
     if (isCISuccess) {
       toast.success("Invoice generated and sent successfully.");
-      router.push(`/invoice/${order._id}`);
+      router.push(`/admin/invoice/${order._id}`);
       onClose();
     }
     if (ciError) {

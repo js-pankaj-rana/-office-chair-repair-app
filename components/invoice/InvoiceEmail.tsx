@@ -39,7 +39,7 @@ const InvoiceEmail = () => {
         const pdf = new jsPDF();
         const pdfWidth = pdf.internal.pageSize.getWidth();
         pdf.addImage(imgData, 0, 0, pdfWidth, 0);
-        pdf.save(`invoice_${data?.data?.order?.orderNumber}.pdf`);
+        pdf.save(`invoice_${data?.data?.orderNumber}.pdf`);
       });
     }
   };

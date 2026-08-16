@@ -21,12 +21,12 @@ export const userApi = createApi({
         };
       },
     }),
+
     updateSession: builder.query({
-      query() {
-        return {
-          url: "/auth/session?update",
-        };
-      },
+      query: () => ({
+        url: "/auth/session?update",
+      }),
+      providesTags: ["Address"],
     }),
     updatePassword: builder.mutation({
       query(body) {

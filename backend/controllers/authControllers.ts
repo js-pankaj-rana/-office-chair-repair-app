@@ -175,10 +175,20 @@ export const editAddress = catchAsyncErrors(
         },
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       }
     );
+
+    if (isDefault) {
+      user.address.forEach((addr: IAddress) => {
+        if (addr._id.toString() != id) {
+          addr.isDefault = false;
+          return;
+        }
+      });
+      user?.save();
+    }
 
     if (!user) {
       throw new ErrorHandler("Address not found.", 404);

@@ -15,17 +15,17 @@ const AdminSidebar = () => {
     // },
     {
       name: "Bookings",
-      url: "/bookings",
+      url: "/admin/bookings",
       icon: "fas fa-receipt",
     },
     {
       name: "Users",
-      url: "/users",
+      url: "/admin/users",
       icon: "fas fa-user",
     },
     {
       name: "Reviews",
-      url: "/reviews",
+      url: "/admin/reviews",
       icon: "fas fa-star",
     },
   ];

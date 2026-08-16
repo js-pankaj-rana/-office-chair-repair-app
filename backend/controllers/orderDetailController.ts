@@ -319,7 +319,7 @@ export const getOrderByIdAdmin = catchAsyncErrors(
     await order?.populate("user");
     return NextResponse.json({
       success: true,
-      data: { order },
+      data: order,
     });
   }
 );

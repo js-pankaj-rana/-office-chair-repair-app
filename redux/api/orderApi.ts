@@ -87,7 +87,7 @@ export const orderApi = createApi({
 
     //only for admin use case start from here
 
-    getOrderByIdAdmin: builder.query({
+    getOrderByIdAdmin: builder.query<{ success: Boolean; data: any }, string>({
       query(id) {
         return {
           url: `/admin/order/${id}`,
@@ -95,10 +95,12 @@ export const orderApi = createApi({
       },
     }),
 
-    getAllOrderAdmin: builder.query<IOrder[], void>({
-      query: () => "/admin/orders",
-      providesTags: ["Images"],
-    }),
+    getAllOrderAdmin: builder.query<{ success: Boolean; data: IOrder[] }, void>(
+      {
+        query: () => "/admin/orders",
+        providesTags: ["Images"],
+      }
+    ),
 
     genrateInvoiceAdmin: builder.mutation({
       query({ id, body }) {

@@ -101,7 +101,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({ id }) => {
       updatedAt: _updatedAt,
       ...restData
     } = reqPayload;
-    updateOrder(restData);
+    await updateOrder(restData);
   };
 
   useEffect(() => {

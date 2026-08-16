@@ -6,6 +6,7 @@ import { Badge, Button, Table } from "react-bootstrap";
 import { useGetAllOrderQuery } from "@/redux/api/orderApi";
 import Loader from "../layout/Loader";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 export interface IOrder {
   _id: string;
@@ -26,7 +27,7 @@ export interface IOrder {
 
 export default function OrderList() {
   const { data: orderResponseData, isLoading } = useGetAllOrderQuery();
-
+  const dispatch = useDispatch();
   const getStatusVariant = (status: string) => {
     switch (status?.toLowerCase()) {
       case "completed":

@@ -9,12 +9,21 @@ import {
   useGetAddressListQuery,
   useDeleteAddressMutation,
 } from "@/redux/api/userApi";
-import Image from "next/image";
+import { setUserAddress } from "@/redux/features/userSlice";
+import { useDispatch } from "react-redux";
+import { useSession } from "next-auth/react";
 
 const UserAddressList = () => {
   const { data: addresses } = useGetAddressListQuery(null);
-
+  const dispatch = useDispatch();
   // const { data: addresses } = useGetAddressListQuery(null);
+  const data = useSession();
+
+  useEffect(() => {
+    if (data && addresses && addresses.data) {
+      dispatch(setUserAddress(addresses.data));
+    }
+  }, [data, addresses]);
 
   const [deleteAddress, { isLoading, isSuccess, error }] =
     useDeleteAddressMutation();
@@ -34,7 +43,7 @@ const UserAddressList = () => {
   };
 
   if (!addresses?.data) {
-    return <p>something went wrong !!!</p>;
+    return <p>loading...</p>;
   }
 
   return (

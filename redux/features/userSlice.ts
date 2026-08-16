@@ -17,6 +17,9 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
     },
+    setUserAddress: (state, action: PayloadAction<any>) => {
+      state.user.address = action.payload;
+    },
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
@@ -25,4 +28,5 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const { setUser, setIsAuthenticated } = userSlice.actions;
+export const { setUser, setUserAddress, setIsAuthenticated } =
+  userSlice.actions;

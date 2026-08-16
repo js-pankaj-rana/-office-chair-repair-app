@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useGetOrderByIdQuery } from "@/redux/api/orderApi";
 import Link from "next/link";
+import { SingleAddress } from "./SingleAddress";
 
 export interface IOrder {
   _id: string;
@@ -100,28 +101,22 @@ const OrderDetail = ({ id }: IProps) => {
 
                     <div className="col-12">
                       <div className="row">
-                        <div className="col-md-6">
-                          <strong>Shipping Address</strong>
-                          <div className="border rounded p-3 mt-2">
-                            <div>{order?.shippingAddress?.addressLine1}</div>
-                            <div>{order?.shippingAddress?.city}</div>
-                            <div>{order?.shippingAddress?.postalCode}</div>
-                          </div>
-                        </div>
-                        {order?.billingAddress?.addressLine1 && (
-                          <div className="col-md-6">
-                            <strong>Billing Address</strong>
-                            <div className="border rounded p-3 mt-2">
-                              {order?.billingName && (
-                                <div>{order.billingName}</div>
-                              )}
-                              {order?.gstin && <div>{order.gstin}</div>}
-                              <div>{order?.billingAddress?.addressLine1}</div>
-                              <div>{order?.billingAddress?.city}</div>
-                              <div>{order?.billingAddress?.postalCode}</div>
+                        {order &&
+                          order.shippingAddress &&
+                          order?.shippingAddress?.addressLine1 && (
+                            <div className="col-md-6">
+                              <strong>Shipping Address</strong>
+                              <SingleAddress address={order.shippingAddress} />
                             </div>
-                          </div>
-                        )}
+                          )}
+                        {order &&
+                          order.billingAddress &&
+                          order?.billingAddress?.addressLine1 && (
+                            <div className="col-md-6">
+                              <strong>Billing Address</strong>
+                              <SingleAddress address={order.billingAddress} />
+                            </div>
+                          )}
                       </div>
                     </div>
 

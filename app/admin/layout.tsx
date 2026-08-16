@@ -8,10 +8,9 @@ interface Props {
 const AdminLayout = ({ children }: Props) => {
   return (
     <div>
-      <div className="mt-2 mb-4 bg-light py-2">
-        <h4 className="text-secondary text-center">Admin Dashboard</h4>
+      <div className="mt-2 mb-4 py-3 border-bottom">
+        <h3 className="text-brand text-center">Admin Dashboard</h3>
       </div>
-
       <div className="container">
         <div className="row justify-content-around">
           <div className="col-12 col-lg-2">

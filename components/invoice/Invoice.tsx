@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 
 import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
 import InvoiceHeader from "./InvoiceHeader";
 import { useLazyGetOrderByIdAdminQuery } from "@/redux/api/orderApi";
 import {
@@ -11,11 +11,12 @@ import {
   useUploadInvoiceMutation,
 } from "@/redux/api/invoiceApi";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { skipToken } from "@reduxjs/toolkit/query";
 import InvoiceDetails from "./InvoiceDetails";
 import CustomerDetails from "./CustomerDetails";
 import toast from "react-hot-toast";
+import Loader from "../layout/Loader";
 
 export interface InvoiceItem {
   description: string;
@@ -70,7 +71,8 @@ const Invoice = () => {
   const id = params.id as string;
   const docRef = useRef(null);
 
-  const [getOrder, { data, isLoading }] = useLazyGetOrderByIdAdminQuery(
+  const router = useRouter();
+  const [getOrder, { data }] = useLazyGetOrderByIdAdminQuery(
     // @ts-ignore
     id ? id : skipToken
   );
@@ -102,9 +104,9 @@ const Invoice = () => {
       }).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
 
-        const pdf = new jsPDF();
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        pdf.addImage(imgData, 0, 0, pdfWidth, 0);
+        // const pdf = new jsPDF();
+        // const pdfWidth = pdf.internal.pageSize.getWidth();
+        // pdf.addImage(imgData, 0, 0, pdfWidth, 0);
         // pdf.save(`quotation_${id}.pdf`);
 
         const reqPayload = {
@@ -126,10 +128,21 @@ const Invoice = () => {
   }, [id, getOrder, getInvoiceByOrder]);
 
   useEffect(() => {
+    let timeOut = undefined;
+    if (uploadInvoiceError) {
+      // @ts-ignore
+      toast.error(uploadInvoiceError.data.message);
+    }
     if (uploadInvoiceData) {
       toast.success(uploadInvoiceData.data.message);
+      timeOut = setTimeout(() => {
+        timeOut = router.push("/admin/bookings");
+      }, 1000);
     }
-  }, [uploadInvoiceData]);
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [uploadInvoiceData, uploadInvoiceError]);
 
   return (
     <>
@@ -138,24 +151,30 @@ const Invoice = () => {
           <div className="text-end">
             <button
               className="btn btn-brand text-white"
+              disabled={isUploading}
               onClick={sendEmailAndUploadInvoice}
             >
               Generate Invoice and Send Email to Customer
             </button>
           </div>
-          <div className="container-fluid p-0 invoice-wrap mb-5" ref={docRef}>
-            <InvoiceHeader />
-            <CustomerDetails
-              customerName={data?.data?.order?.user.name}
-              customerEmail={data?.data?.order?.user.email}
-              customerPhone={data?.data?.order?.user.phone}
-              shippingAddress={data?.data?.order?.shippingAddress}
-              billingAddress={data?.data?.order?.billingAddress}
-              orderNumber={data?.data?.order?.orderNumber}
-              gstin={data?.data?.order?.gstin}
-            />
-            <InvoiceDetails invoiceData={invoiceData?.data} />
-          </div>
+
+          {isUploading ? (
+            <Loader />
+          ) : (
+            <div className="container-fluid p-0 invoice-wrap mb-5" ref={docRef}>
+              <InvoiceHeader />
+              <CustomerDetails
+                customerName={invoiceData.data?.order?.user.name}
+                customerEmail={invoiceData.data?.order?.user.email}
+                customerPhone={invoiceData.data?.order?.user.phone}
+                shippingAddress={invoiceData.data?.order?.shippingAddress}
+                billingAddress={invoiceData.data?.order?.billingAddress}
+                orderNumber={invoiceData.data?.order?.orderNumber}
+                gstin={invoiceData.data?.order?.gstin}
+              />
+              <InvoiceDetails invoiceData={invoiceData?.data} />
+            </div>
+          )}
         </>
       ) : (
         <></>

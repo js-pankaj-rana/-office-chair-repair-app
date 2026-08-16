@@ -24,8 +24,7 @@ export default function EditAddress() {
   // const handleBackAddresses = () => {
   //     router.push("/me/addresses");
   // }
-  const [editAddress, { isLoading, isSuccess, error }] =
-    useEditAddressMutation();
+  const [editAddress, { isSuccess, error }] = useEditAddressMutation();
 
   const { data } = useGetAddressQuery(id);
   const [updateSession, { data: sessionData }] = useLazyUpdateSessionQuery();
@@ -92,13 +91,30 @@ export default function EditAddress() {
     }
   }, [isSuccess]);
 
+  useEffect(() => {
+    if (error) {
+      // @ts-ignore
+      toast.error(error.errMessage);
+    }
+  }, [error]);
+
+  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   const address = {
+  //     ...updateAddress,
+  //   };
+  //   await editAddress({ id, address });
+  // };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    await editAddress({
+      id,
+      address: { ...updateAddress },
+    }).unwrap();
 
-    const address = {
-      ...updateAddress,
-    };
-    await editAddress({ id, address });
+    // Address list will be invalidated automatically
   };
 
   return (

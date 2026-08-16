@@ -1,5 +1,4 @@
 import Invoice from "@/components/invoice/Invoice";
-import InvoiceEmail from "@/components/invoice/InvoiceEmail";
 
 export const metadata = {
   title: "Order Invoice Review",

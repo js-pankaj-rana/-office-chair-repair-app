@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IOrderDetail } from "@/backend/models/orderdetails";
 import {
   useDeleteProductImageMutation,
   useGetAllOrderAdminQuery,
 } from "@/redux/api/orderApi";
 import { MDBDataTable } from "mdbreact";
-import { toast } from "react-hot-toast";
+// import { toast } from "react-hot-toast";
 import moment from "moment";
 import OrderReviewModal from "@/components/modals/OrderReviewModal";
+import { useDispatch } from "react-redux";
 
 export interface DeleteImagePayload {
   orderId: string;
@@ -19,6 +20,7 @@ export interface DeleteImagePayload {
 }
 
 const AllBookings = () => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [currentOrder, setCurrentOrder] = useState<IOrderDetail | null>(null);
 
@@ -145,7 +147,7 @@ const AllBookings = () => {
         />
       )}
       <div className="container">
-        <h5 className="my-3 text-primary">{bookings?.length} Bookings</h5>
+        <h5 className="my-3 text-primary">{bookings?.data.length} Bookings</h5>
         <MDBDataTable
           data={setBookings()}
           className="px-3"
