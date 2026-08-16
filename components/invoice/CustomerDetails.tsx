@@ -77,7 +77,7 @@ export default function CustomerDetails({
                 </tr>
                 <tr>
                   <td className="fw-bold">Customer Email: </td>
-                  <td>{user.name}</td>
+                  <td>{user.email}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Customer Phone: </td>
@@ -93,7 +93,7 @@ export default function CustomerDetails({
                 <tr>
                   <td className="fw-bold">Billing Address: </td>
                   <td>
-                    {firmBillingName}, {billingAddressLine1},{" "}
+                    {firmBillingName} {billingAddressLine1}{" "}
                     {billingAddressLine2}, {billingCity}, {billingState},{" "}
                     {billingPostalCode}
                   </td>
